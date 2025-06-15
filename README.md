@@ -65,4 +65,4 @@ Lihat pada dokumentasi laporan atau buka file `index.php`, `register.php`, dan `
 
 ## 💬 Kontak
 Untuk informasi lebih lanjut, silakan hubungi:
-> Muhammad Raihan Hidayah – raihan.hidayah@email.com
+> Muhammad Raihan Hidayah – g3muhraihan.hidayah@email.com
