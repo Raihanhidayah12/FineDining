@@ -2,22 +2,24 @@
 session_start();
 include '../includes/config.php';
 
-// Check if user is logged in and has admin role
+// Memeriksa apakah pengguna sudah login dan memiliki peran admin
+// Memastikan hanya admin yang dapat mengakses halaman ini
 if (!isset($_SESSION['id_user']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: ../index.php');
     exit;
 }
 
-// Check if username is set, provide a fallback if not
+// Memeriksa apakah username tersedia, memberikan fallback jika tidak
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Admin';
 
-// Get admin ID from session
+// Mendapatkan ID admin dari sesi
 $id_admin = $_SESSION['id_user'];
 
-// Initialize message
+// Inisialisasi variabel pesan untuk memberikan umpan balik kepada pengguna
 $message = '';
 
-// Fetch all used table numbers and their status
+// Mengambil semua nomor meja yang sudah digunakan dan statusnya
+// Digunakan untuk mengelola ketersediaan meja di bagian manajemen area
 $used_tables = [];
 $result = $conn->query("SELECT nomor_meja, tersedia FROM area");
 if ($result) {
@@ -27,7 +29,8 @@ if ($result) {
     $result->free();
 }
 
-// Handle form submission for adding a new menu
+// Menangani pengiriman formulir untuk menambahkan menu baru
+// CRUD: Operasi Create untuk menu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
     $nama_menu = filter_input(INPUT_POST, 'nama_menu', FILTER_SANITIZE_STRING);
     $harga = filter_input(INPUT_POST, 'harga', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -36,22 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $stok = filter_input(INPUT_POST, 'stok', FILTER_SANITIZE_NUMBER_INT);
     $tersedia = filter_input(INPUT_POST, 'tersedia', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT) ? 1 : 0;
 
+    // Memvalidasi kolom yang diperlukan
     if (empty($nama_menu) || empty($harga) || empty($kategori) || $stok === null || $stok < 0) {
         $message = '<div class="alert alert-danger">Nama menu, harga, kategori, dan stok harus diisi dengan benar!</div>';
     } else {
         $gambar_menu = null;
+        // Menangani unggahan file untuk gambar menu
         if (isset($_FILES['gambar_menu']) && $_FILES['gambar_menu']['error'] !== UPLOAD_ERR_NO_FILE) {
             $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
             $upload_dir = '../img/';
-            $max_file_size = 50 * 1024 * 1024; // 50MB in bytes
+            $max_file_size = 50 * 1024 * 1024; // 50MB dalam byte
 
             error_log("Upload attempt: " . print_r($_FILES['gambar_menu'], true));
 
             if ($_FILES['gambar_menu']['error'] !== UPLOAD_ERR_OK) {
                 $upload_errors = [
                     UPLOAD_ERR_INI_SIZE => 'Ukuran file melebihi batas server (50MB).',
-                    UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas form.',
-                    UPLOAD_ERR_PARTIAL => 'File hanya terupload sebagian.',
+                    UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas formulir.',
+                    UPLOAD_ERR_PARTIAL => 'File hanya terunggah sebagian.',
                     UPLOAD_ERR_NO_TMP_DIR => 'Direktori sementara tidak ditemukan.',
                     UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk.',
                     UPLOAD_ERR_EXTENSION => 'Ekstensi file tidak diizinkan.'
@@ -78,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
 
+        // Jika tidak ada pesan kesalahan, masukkan data ke database
         if (empty($message)) {
             $stmt = $conn->prepare("INSERT INTO menu (nama_menu, harga, deskripsi, kategori, stok, tersedia, id_admin, gambar_menu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             if ($stmt) {
@@ -89,13 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 }
                 $stmt->close();
             } else {
-                $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+                $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
             }
         }
     }
 }
 
-// Handle form submission for editing a menu
+// Menangani pengiriman formulir untuk mengedit menu
+// CRUD: Operasi Update untuk menu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit') {
     $id_menu = filter_input(INPUT_POST, 'id_menu', FILTER_SANITIZE_NUMBER_INT);
     $nama_menu = filter_input(INPUT_POST, 'nama_menu', FILTER_SANITIZE_STRING);
@@ -105,22 +112,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $stok = filter_input(INPUT_POST, 'stok', FILTER_SANITIZE_NUMBER_INT);
     $tersedia = filter_input(INPUT_POST, 'tersedia', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT) ? 1 : 0;
 
+    // Memvalidasi kolom yang diperlukan
     if (empty($nama_menu) || empty($harga) || empty($kategori) || $stok === null || $stok < 0) {
         $message = '<div class="alert alert-danger">Nama menu, harga, kategori, dan stok harus diisi dengan benar!</div>';
     } else {
         $gambar_menu = null;
+        // Menangani unggahan file untuk gambar menu baru
         if (isset($_FILES['gambar_menu']) && $_FILES['gambar_menu']['error'] !== UPLOAD_ERR_NO_FILE) {
             $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
             $upload_dir = '../img/';
-            $max_file_size = 50 * 1024 * 1024; // 50MB in bytes
+            $max_file_size = 50 * 1024 * 1024;
 
             error_log("Edit upload attempt: " . print_r($_FILES['gambar_menu'], true));
 
             if ($_FILES['gambar_menu']['error'] !== UPLOAD_ERR_OK) {
                 $upload_errors = [
                     UPLOAD_ERR_INI_SIZE => 'Ukuran file melebihi batas server (50MB).',
-                    UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas form.',
-                    UPLOAD_ERR_PARTIAL => 'File hanya terupload sebagian.',
+                    UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas formulir.',
+                    UPLOAD_ERR_PARTIAL => 'File hanya terunggah sebagian.',
                     UPLOAD_ERR_NO_TMP_DIR => 'Direktori sementara tidak ditemukan.',
                     UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk.',
                     UPLOAD_ERR_EXTENSION => 'Ekstensi file tidak diizinkan.'
@@ -147,6 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
 
+        // Jika tidak ada pesan kesalahan, perbarui data di database
         if (empty($message)) {
             $query = "UPDATE menu SET nama_menu = ?, harga = ?, deskripsi = ?, kategori = ?, stok = ?, tersedia = ?";
             $params = [$nama_menu, $harga, $deskripsi, $kategori, $stok, $tersedia];
@@ -165,13 +175,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $stmt->bind_param($types, ...$params);
                 if ($stmt->execute()) {
                     if ($stok == 0) {
+                        // Jika stok nol, otomatis set tersedia ke 0
                         $stmt_tersedia = $conn->prepare("UPDATE menu SET tersedia = 0 WHERE id_menu = ?");
                         if ($stmt_tersedia) {
                             $stmt_tersedia->bind_param("i", $id_menu);
                             $stmt_tersedia->execute();
                             $stmt_tersedia->close();
                         } else {
-                            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+                            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
                         }
                     }
                     $message = '<div class="alert alert-success">Menu berhasil diperbarui!</div>';
@@ -180,17 +191,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 }
                 $stmt->close();
             } else {
-                $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+                $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
             }
         }
     }
 }
 
-// Handle form submission for restocking
+// Menangani pengiriman formulir untuk restock menu
+// CRUD: Operasi Update untuk stok menu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'restock') {
     $id_menu = filter_input(INPUT_POST, 'id_menu', FILTER_SANITIZE_NUMBER_INT);
     $restock_amount = filter_input(INPUT_POST, 'restock_amount', FILTER_SANITIZE_NUMBER_INT);
 
+    // Memvalidasi jumlah restock
     if ($restock_amount <= 0) {
         $message = '<div class="alert alert-danger">Jumlah restock harus lebih dari 0!</div>';
     } else {
@@ -204,12 +217,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             $stmt->close();
         } else {
-            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
         }
     }
 }
 
-// Handle menu deletion
+// Menangani penghapusan menu
+// CRUD: Operasi Delete untuk menu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $id_menu = filter_input(INPUT_POST, 'id_menu', FILTER_SANITIZE_NUMBER_INT);
     $stmt = $conn->prepare("SELECT gambar_menu FROM menu WHERE id_menu = ?");
@@ -220,6 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $menu = $result->fetch_assoc();
         $stmt->close();
 
+        // Menghapus gambar terkait jika ada
         if ($menu && !empty($menu['gambar_menu']) && file_exists('../' . $menu['gambar_menu'])) {
             unlink('../' . $menu['gambar_menu']);
         }
@@ -234,12 +249,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             $stmt->close();
         } else {
-            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
         }
     }
 }
 
-// Handle form submission for adding a new area
+// Menangani pengiriman formulir untuk menambahkan area baru
+// CRUD: Operasi Create untuk area
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_area') {
     $nama_area = filter_input(INPUT_POST, 'nama_area', FILTER_SANITIZE_STRING);
     $nomor_meja = filter_input(INPUT_POST, 'nomor_meja', FILTER_SANITIZE_NUMBER_INT);
@@ -247,9 +263,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $kapasitas = filter_input(INPUT_POST, 'kapasitas', FILTER_SANITIZE_NUMBER_INT);
     $tersedia = filter_input(INPUT_POST, 'tersedia', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT) ? 1 : 0;
 
+    // Memvalidasi kolom yang diperlukan dan memastikan nomor meja valid
     if (empty($nama_area) || empty($nomor_meja) || $kapasitas === null || $kapasitas <= 0 || !in_array($nomor_meja, range(1, 36))) {
         $message = '<div class="alert alert-danger">Nama area, nomor meja, dan kapasitas harus diisi dengan benar! Nomor meja harus antara 1-36.</div>';
     } else {
+        // Memeriksa apakah nomor meja sudah digunakan
         $check_stmt = $conn->prepare("SELECT id_area FROM area WHERE nomor_meja = ?");
         if ($check_stmt) {
             $check_stmt->bind_param("i", $nomor_meja);
@@ -259,6 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $message = '<div class="alert alert-danger">Nomor meja sudah digunakan!</div>';
             } else {
                 $gambar_area = null;
+                // Menangani unggahan file untuk gambar area
                 if (isset($_FILES['gambar_area']) && $_FILES['gambar_area']['error'] !== UPLOAD_ERR_NO_FILE) {
                     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
                     $upload_dir = '../img/';
@@ -269,8 +288,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if ($_FILES['gambar_area']['error'] !== UPLOAD_ERR_OK) {
                         $upload_errors = [
                             UPLOAD_ERR_INI_SIZE => 'Ukuran file melebihi batas server (50MB).',
-                            UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas form.',
-                            UPLOAD_ERR_PARTIAL => 'File hanya terupload sebagian.',
+                            UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas formulir.',
+                            UPLOAD_ERR_PARTIAL => 'File hanya terunggah sebagian.',
                             UPLOAD_ERR_NO_TMP_DIR => 'Direktori sementara tidak ditemukan.',
                             UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk.',
                             UPLOAD_ERR_EXTENSION => 'Ekstensi file tidak diizinkan.'
@@ -297,6 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     }
                 }
 
+                // Jika tidak ada pesan kesalahan, masukkan data area ke database
                 if (empty($message)) {
                     $insert_stmt = $conn->prepare("INSERT INTO area (nama_area, nomor_meja, deskripsi, kapasitas, tersedia, id_admin, gambar_area) VALUES (?, ?, ?, ?, ?, ?, ?)");
                     if ($insert_stmt) {
@@ -308,18 +328,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                         $insert_stmt->close();
                     } else {
-                        $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+                        $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
                     }
                 }
             }
             $check_stmt->close();
         } else {
-            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
         }
     }
 }
 
-// Handle form submission for editing an area
+// Menangani pengiriman formulir untuk mengedit area
+// CRUD: Operasi Update untuk area
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit_area') {
     $id_area = filter_input(INPUT_POST, 'id_area', FILTER_SANITIZE_NUMBER_INT);
     $nama_area = filter_input(INPUT_POST, 'nama_area', FILTER_SANITIZE_STRING);
@@ -328,9 +349,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $kapasitas = filter_input(INPUT_POST, 'kapasitas', FILTER_SANITIZE_NUMBER_INT);
     $tersedia = filter_input(INPUT_POST, 'tersedia', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT) ? 1 : 0;
 
+    // Memvalidasi kolom yang diperlukan dan memastikan nomor meja valid
     if (empty($nama_area) || empty($nomor_meja) || $kapasitas === null || $kapasitas <= 0 || !in_array($nomor_meja, range(1, 36))) {
         $message = '<div class="alert alert-danger">Nama area, nomor meja, dan kapasitas harus diisi dengan benar! Nomor meja harus antara 1-36.</div>';
     } else {
+        // Memeriksa apakah nomor meja sudah digunakan oleh area lain
         $stmt = $conn->prepare("SELECT id_area FROM area WHERE nomor_meja = ? AND id_area != ?");
         if ($stmt) {
             $stmt->bind_param("ii", $nomor_meja, $id_area);
@@ -340,6 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $message = '<div class="alert alert-danger">Nomor meja sudah digunakan oleh area lain!</div>';
             } else {
                 $gambar_area = null;
+                // Menangani unggahan file untuk gambar area baru
                 if (isset($_FILES['gambar_area']) && $_FILES['gambar_area']['error'] !== UPLOAD_ERR_NO_FILE) {
                     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
                     $upload_dir = '../img/';
@@ -350,8 +374,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if ($_FILES['gambar_area']['error'] !== UPLOAD_ERR_OK) {
                         $upload_errors = [
                             UPLOAD_ERR_INI_SIZE => 'Ukuran file melebihi batas server (50MB).',
-                            UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas form.',
-                            UPLOAD_ERR_PARTIAL => 'File hanya terupload sebagian.',
+                            UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas formulir.',
+                            UPLOAD_ERR_PARTIAL => 'File hanya terunggah sebagian.',
                             UPLOAD_ERR_NO_TMP_DIR => 'Direktori sementara tidak ditemukan.',
                             UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk.',
                             UPLOAD_ERR_EXTENSION => 'Ekstensi file tidak diizinkan.'
@@ -378,6 +402,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     }
                 }
 
+                // Jika tidak ada pesan kesalahan, perbarui data area di database
                 if (empty($message)) {
                     $query = "UPDATE area SET nama_area = ?, nomor_meja = ?, deskripsi = ?, kapasitas = ?, tersedia = ?";
                     $params = [$nama_area, $nomor_meja, $deskripsi, $kapasitas, $tersedia];
@@ -401,18 +426,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                         $stmt_update->close();
                     } else {
-                        $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+                        $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
                     }
                 }
             }
             $stmt->close();
         } else {
-            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
         }
     }
 }
 
-// Handle area deletion
+// Menangani penghapusan area
+// CRUD: Operasi Delete untuk area
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_area') {
     $id_area = filter_input(INPUT_POST, 'id_area', FILTER_SANITIZE_NUMBER_INT);
     $stmt = $conn->prepare("SELECT gambar_area FROM area WHERE id_area = ?");
@@ -423,6 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $area = $result->fetch_assoc();
         $stmt->close();
 
+        // Menghapus gambar terkait jika ada
         if ($area && !empty($area['gambar_area']) && file_exists('../' . $area['gambar_area'])) {
             unlink('../' . $area['gambar_area']);
         }
@@ -437,31 +464,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
             $stmt->close();
         } else {
-            $message = '<div class="alert alert-danger">Database error: ' . $conn->error . '</div>';
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
         }
     }
 }
 
-// Fetch statistics data
+// Menangani perubahan peran pengguna
+// CRUD: Operasi Update untuk peran pengguna
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_role') {
+    $id_user = filter_input(INPUT_POST, 'id_user', FILTER_SANITIZE_NUMBER_INT);
+    $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
+
+    // Memastikan peran yang dipilih valid
+    if (!in_array($role, ['admin', 'chef', 'kasir'])) {
+        $message = '<div class="alert alert-danger">Peran tidak valid!</div>';
+    } else {
+        $stmt = $conn->prepare("UPDATE user SET role = ? WHERE id_user = ?");
+        if ($stmt) {
+            $stmt->bind_param("si", $role, $id_user);
+            if ($stmt->execute()) {
+                $message = '<div class="alert alert-success">Peran pengguna berhasil diperbarui!</div>';
+            } else {
+                $message = '<div class="alert alert-danger">Gagal memperbarui peran: ' . $stmt->error . '</div>';
+            }
+            $stmt->close();
+        } else {
+            $message = '<div class="alert alert-danger">Kesalahan database: ' . $conn->error . '</div>';
+        }
+    }
+}
+
+// Mengambil data statistik
 $total_pendapatan = 0;
 $total_pesanan = 0;
 $pelanggan_baru = 0;
-$rating = 0;
+$pesanan_dibatalkan = 0;
 
-$result = $conn->query("SELECT COUNT(*) as total FROM pesanan");
+// Total pesanan (hanya yang selesai)
+$result = $conn->query("SELECT COUNT(*) as total FROM pesanan WHERE status_pesanan = 'selesai'");
 if ($result) {
     $row = $result->fetch_assoc();
     $total_pesanan = $row['total'];
     $result->free();
 }
 
-$result = $conn->query("SELECT SUM(p.jumlah * m.harga) as total FROM pesanan p JOIN menu m ON p.id_menu = m.id_menu");
+// Total pendapatan (dari pesanan yang bukan cancelled)
+$result = $conn->query("SELECT SUM(p.jumlah * m.harga) as total FROM pesanan p JOIN menu m ON p.id_menu = m.id_menu WHERE p.status_pesanan != 'Cancelled'");
 if ($result) {
     $row = $result->fetch_assoc();
     $total_pendapatan = $row['total'] ?? 0;
     $result->free();
 }
 
+// Pelanggan baru (tidak berubah)
 $bulan_ini = date('Y-m');
 $result = $conn->query("SELECT COUNT(*) as total FROM customer WHERE DATE_FORMAT(tanggal_daftar, '%Y-%m') = '$bulan_ini'");
 if ($result) {
@@ -470,23 +525,20 @@ if ($result) {
     $result->free();
 }
 
-$result = $conn->query("SHOW TABLES LIKE 'review'");
-if ($result && $result->num_rows > 0) {
+// Pesanan dibatalkan
+$result = $conn->query("SELECT COUNT(*) as total FROM pesanan WHERE status_pesanan = 'Cancelled'");
+if ($result) {
+    $row = $result->fetch_assoc();
+    $pesanan_dibatalkan = $row['total'];
     $result->free();
-    $rating_result = $conn->query("SELECT AVG(rating) as avg_rating FROM review");
-    if ($rating_result) {
-        $row = $rating_result->fetch_assoc();
-        $rating = round($row['avg_rating'] ?? 0, 1);
-        $rating_result->free();
-    }
 }
 
-// Fetch recent orders
+// Mengambil pesanan terbaru (hanya yang masih dipesan/pending)
 $recent_orders = [];
 $status_column_exists = false;
 $id_customer_column_exists = false;
 
-$column_check = $conn->query("SHOW COLUMNS FROM pesanan LIKE 'status'");
+$column_check = $conn->query("SHOW COLUMNS FROM pesanan LIKE 'status_pesanan'");
 if ($column_check && $column_check->num_rows > 0) {
     $status_column_exists = true;
     $column_check->free();
@@ -506,20 +558,22 @@ if ($id_customer_column_exists) {
 }
 $query .= "m.nama_menu as menu, (p.jumlah * m.harga) as total_harga, a.nama_area, a.nomor_meja";
 if ($status_column_exists) {
-    $query .= ", p.status";
+    $query .= ", p.status_pesanan";
 } else {
-    $query .= ", CASE 
-        WHEN p.tanggal_selesai IS NOT NULL THEN 'Completed' 
-        ELSE 'Pending' 
-    END as status";
+    $query .= ", CASE WHEN p.tanggal_selesai IS NULL THEN 'Pending' ELSE 'selesai' END as status_pesanan";
 }
 $query .= " FROM pesanan p";
 if ($id_customer_column_exists) {
     $query .= " JOIN customer c ON p.id_customer = c.id_customer";
 }
 $query .= " JOIN menu m ON p.id_menu = m.id_menu";
-$query .= " LEFT JOIN area a ON p.id_area = a.id_area"; // Mengubah join ke area langsung dari pesanan
-$query .= " ORDER BY p.tanggal_pesanan DESC LIMIT 5";
+$query .= " LEFT JOIN area a ON p.id_area = a.id_area";
+if ($status_column_exists) {
+    $query .= " WHERE p.status_pesanan = 'dipesan'";
+} else {
+    $query .= " WHERE p.tanggal_selesai IS NULL";
+}
+$query .= " ORDER BY p.tanggal_pesanan ";
 
 $result = $conn->query($query);
 if ($result) {
@@ -529,7 +583,35 @@ if ($result) {
     $result->free();
 }
 
-// Fetch users and customers for Kelola Akun
+// Mengambil pesanan yang dibatalkan
+$cancelled_orders = [];
+if ($status_column_exists) {
+    $query = "SELECT p.id_pesanan, ";
+    if ($id_customer_column_exists) {
+        $query .= "c.nama_lengkap, ";
+    } else {
+        $query .= "'Unknown Customer' as nama_lengkap, ";
+    }
+    $query .= "m.nama_menu as menu, (p.jumlah * m.harga) as total_harga, a.nama_area, a.nomor_meja, p.status_pesanan 
+              FROM pesanan p";
+    if ($id_customer_column_exists) {
+        $query .= " JOIN customer c ON p.id_customer = c.id_customer";
+    }
+    $query .= " JOIN menu m ON p.id_menu = m.id_menu 
+                LEFT JOIN area a ON p.id_area = a.id_area 
+                WHERE p.status_pesanan = 'Cancelled' 
+                ORDER BY p.tanggal_pesanan DESC LIMIT 5";
+
+    $result = $conn->query($query);
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $cancelled_orders[] = $row;
+        }
+        $result->free();
+    }
+}
+
+// Mengambil pengguna dan pelanggan untuk manajemen akun
 $users = [];
 $result = $conn->query("SELECT * FROM user");
 if ($result) {
@@ -548,7 +630,7 @@ if ($result) {
     $result->free();
 }
 
-// Fetch areas for Daftar Area
+// Mengambil area untuk daftar area
 $areas = [];
 $result = $conn->query("SELECT * FROM area ORDER BY nama_area");
 if ($result) {
@@ -558,10 +640,10 @@ if ($result) {
     $result->free();
 }
 
-// Determine active section
+// Menentukan bagian aktif
 $section = isset($_GET['section']) ? $_GET['section'] : 'dashboard';
 
-// Fetch menu item for editing or viewing
+// Mengambil item menu untuk pengeditan atau tampilan
 $edit_menu = null;
 $view_menu = null;
 if ($section === 'edit_menu' || $section === 'view_menu') {
@@ -579,7 +661,7 @@ if ($section === 'edit_menu' || $section === 'view_menu') {
     }
 }
 
-// Fetch area for editing or viewing
+// Mengambil area untuk pengeditan atau tampilan
 $edit_area = null;
 $view_area = null;
 if ($section === 'edit_area' || $section === 'view_area') {
@@ -597,7 +679,7 @@ if ($section === 'edit_area' || $section === 'view_area') {
     }
 }
 
-// Update tersedia status for zero stock items
+// Memperbarui status tersedia untuk item dengan stok nol
 $stmt = $conn->prepare("UPDATE menu SET tersedia = 0 WHERE stok = 0 AND tersedia = 1");
 if ($stmt) {
     $stmt->execute();
@@ -615,165 +697,276 @@ if ($stmt) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+ /* Mengatur gaya umum dengan tema gelap */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-    body {
-      background: #f4f4f9;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-    }
+body {
+  background: #1a1a1a;
+  color: #ffffff; /* Mengatur semua teks menjadi putih */
+  min-height: 100vh;
+  display: flex;
+}
 
-    .sidebar {
-      width: 250px;
-      background: #fff;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      height: 100vh;
-      position: fixed;
-    }
+.sidebar {
+  width: 250px;
+  background: #2c2c2c;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  transition: width 0.3s;
+}
 
-    .sidebar h2 {
-      color: #333;
-      font-size: 20px;
-      margin-bottom: 30px;
-      text-align: center;
-    }
+.sidebar h2 {
+  color: #ffffff; /* Teks putih */
+  font-size: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 5px 0; /* Menambahkan padding untuk memastikan teks terlihat */
+}
 
-    .sidebar ul {
-      list-style: none;
-    }
+.sidebar ul {
+  list-style: none;
+}
 
-    .sidebar ul li {
-      margin-bottom: 10px;
-    }
+.sidebar ul li {
+  margin-bottom: 10px;
+}
 
-    .sidebar ul li a {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      color: #333;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.3s;
-    }
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #ffffff; /* Teks putih */
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+  min-height: 40px; /* Memastikan tinggi minimum untuk teks */
+}
 
-    .sidebar ul li a:hover,
-    .sidebar ul li a.active {
-      background: #f1c40f;
-      color: #fff;
-    }
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background: #f1c40f;
+  color: #1a1a1a; /* Teks hitam saat hover/active */
+}
 
-    .sidebar ul li a i {
-      margin-right: 10px;
-    }
+.sidebar ul li a i {
+  margin-right: 10px;
+  color: #ffffff; /* Ikon putih */
+}
 
-    .main-content {
-      margin-left: 250px;
-      padding: 20px;
-      width: calc(100% - 250px);
-    }
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s, width 0.3s;
+  color: #ffffff; /* Teks putih */
+}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      padding: 15px 30px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2c2c2c;
+  padding: 15px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+}
 
-    .header h1 {
-      font-size: 24px;
-      color: #333;
-    }
+.header h1 {
+  font-size: 24px;
+  color: #ffffff; /* Teks putih */
+  padding: 5px 0; /* Menambahkan padding untuk memastikan teks terlihat */
+}
 
-    .header .user {
-      display: flex;
-      align-items: center;
-    }
+.header .user {
+  display: flex;
+  align-items: center;
+}
 
-    .header .user i {
-      margin-left: 10px;
-      color: #333;
-    }
+.header .user i {
+  margin-left: 10px;
+  color: #ffffff; /* Ikon putih */
+}
 
-    .menu-card, .area-card {
-      position: relative;
-      transition: transform 0.2s;
-    }
+.menu-card,
+.area-card {
+  position: relative;
+  background: #333;
+  transition: transform 0.2s;
+  color: #ffffff; /* Teks putih */
+}
 
-    .menu-card:hover, .area-card:hover {
-      transform: translateY(-5px);
-    }
+.menu-card:hover,
+.area-card:hover {
+  transform: translateY(-5px);
+}
 
-    .restock-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-    }
+.restock-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
 
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1055;
-    }
+/* Menyesuaikan tampilan toast */
+.toast {
+  background-color: white;
+  color: black;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .table-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 5px;
-      max-width: 600px;
-      margin-top: 10px;
-    }
+.toast-header {
+  background-color: #fff3cd; /* Warna kuning terang */
+  color: black;
+  border-bottom: 1px solid #dee2e6;
+}
 
-    .table-cell {
-      border: 2px solid #ccc;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background-color: #fff;
-      transition: background-color 0.3s;
-    }
+.toast-body {
+  background-color: white;
+  color: black;
+  padding: 15px;
+}
 
-    .table-cell:hover:not(.selected-red):not(.selected-green) {
-      background-color: #f0f0f0;
-    }
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1055;
+}
 
-    .table-cell.selected {
-      background-color: #ffd700;
-      border-color: #ffd700;
-    }
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  max-width: 600px;
+  margin-top: 10px;
+}
 
-    .table-cell.selected-red {
-      background-color: #ff0000;
-      border-color: #ff0000;
-      color: #fff;
-      cursor: not-allowed;
-    }
+.table-cell {
+  border: 2px solid #555;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #444;
+  color: #ffffff; /* Teks putih */
+  transition: background-color 0.3s;
+}
 
-    .table-cell.selected-green {
-      background-color: #00ff00;
-      border-color: #00ff00;
-      color: #fff;
-      cursor: not-allowed;
-    }
+.table-cell:hover:not(.selected-red):not(.selected-green) {
+  background-color: #555;
+}
+
+.table-cell.selected {
+  background-color: #f1c40f;
+  border-color: #f1c40f;
+  color: #1a1a1a; /* Teks hitam saat dipilih */
+}
+
+.table-cell.selected-red {
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+  color: #ffffff; /* Teks putih */
+  cursor: not-allowed;
+}
+
+.table-cell.selected-green {
+  background-color: #2ecc71;
+  border-color: #2ecc71;
+  color: #ffffff; /* Teks putih */
+  cursor: not-allowed;
+}
+
+/* Membuat desain responsif */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80px;
+  }
+
+  .sidebar h2 {
+    font-size: 16px;
+  }
+
+  .sidebar ul li a {
+    justify-content: center;
+  }
+
+  .sidebar ul li a span {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+
+  .table-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .table-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-img-top {
+    height: 100px !important;
+  }
+}
+
+.table-dark {
+  color: #ffffff; /* Teks putih */
+}
+
+.table-dark th,
+.table-dark td {
+  color: #ffffff; /* Pastikan header dan isi tabel putih */
+}
+
+/* Pastikan semua elemen form memiliki teks putih */
+.form-control,
+.form-select {
+  background-color: #2c2c2c;
+  color: #ffffff;
+}
+
+/* Pastikan placeholder teks putih */
+.form-control::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+/* Pastikan teks di dalam card putih */
+.card-text,
+.card-title {
+  color: #ffffff;
+}
+
+/* Mengubah warna teks <small> menjadi putih */
+small {
+  color: #ffffff !important; /* Memaksa warna putih untuk mengatasi konflik Bootstrap */
+}
+
+/* Menambahkan properti tambahan untuk small jika diperlukan */
+small.text-muted {
+  color: #ffffff !important; /* Mengganti warna muted menjadi putih */
+}
   </style>
 </head>
 <body>
-  <!-- Toast Notification -->
+  <!-- Menampilkan notifikasi toast untuk stok habis -->
   <div class="toast-container">
     <?php
     $result = $conn->query("SELECT id_menu, nama_menu FROM menu WHERE stok = 0");
@@ -793,12 +986,13 @@ if ($stmt) {
   <div class="sidebar">
     <h2>FineDining Admin</h2>
     <ul>
-      <li><a href="?section=dashboard" class="<?php echo $section === 'dashboard' ? 'active' : ''; ?>"><i class="fas fa-chart-line"></i> Statistik</a></li>
-      <li><a href="?section=kelola_menu" class="<?php echo $section === 'kelola_menu' ? 'active' : ''; ?>"><i class="fas fa-utensils"></i> Kelola Menu</a></li>
-      <li><a href="?section=menu" class="<?php echo $section === 'menu' ? 'active' : ''; ?>"><i class="fas fa-book"></i> Daftar Menu</a></li>
-      <li><a href="?section=kelola_area" class="<?php echo $section === 'kelola_area' ? 'active' : ''; ?>"><i class="fas fa-map"></i> Kelola Area</a></li>
-      <li><a href="?section=daftar_area" class="<?php echo $section === 'daftar_area' ? 'active' : ''; ?>"><i class="fas fa-list"></i> Daftar Area</a></li>
-      <li><a href="?section=kelola_akun" class="<?php echo $section === 'kelola_akun' ? 'active' : ''; ?>"><i class="fas fa-users"></i> Kelola Akun</a></li>
+      <li><a href="?section=dashboard" class="<?php echo $section === 'dashboard' ? 'active' : ''; ?>"><i class="fas fa-chart-line"></i><span>Statistik</span></a></li>
+      <li><a href="?section=kelola_menu" class="<?php echo $section === 'kelola_menu' ? 'active' : ''; ?>"><i class="fas fa-utensils"></i><span>Kelola Menu</span></a></li>
+      <li><a href="?section=menu" class="<?php echo $section === 'menu' ? 'active' : ''; ?>"><i class="fas fa-book"></i><span>Daftar Menu</span></a></li>
+      <li><a href="?section=kelola_area" class="<?php echo $section === 'kelola_area' ? 'active' : ''; ?>"><i class="fas fa-map"></i><span>Kelola Area</span></a></li>
+      <li><a href="?section=daftar_area" class="<?php echo $section === 'daftar_area' ? 'active' : ''; ?>"><i class="fas fa-list"></i><span>Daftar Area</span></a></li>
+      <li><a href="?section=kelola_akun" class="<?php echo $section === 'kelola_akun' ? 'active' : ''; ?>"><i class="fas fa-users"></i><span>Kelola Akun</span></a></li>
+      <li><a href="?section=cancelled_orders" class="<?php echo $section === 'cancelled_orders' ? 'active' : ''; ?>"><i class="fas fa-times-circle"></i><span>Pesanan Dibatalkan</span></a></li>
     </ul>
   </div>
 
@@ -816,6 +1010,7 @@ if ($stmt) {
         elseif ($section === 'view_menu') echo 'Detail Menu';
         elseif ($section === 'edit_area') echo 'Edit Area';
         elseif ($section === 'view_area') echo 'Detail Area';
+        elseif ($section === 'cancelled_orders') echo 'Pesanan Dibatalkan';
         ?>
       </h1>
       <div class="user">
@@ -826,45 +1021,44 @@ if ($stmt) {
 
     <?php echo $message; ?>
 
-    <?php if ($section === 'dashboard'): ?>
-    <div class="stats d-flex gap-3 mb-4">
-      <div class="card flex-fill text-center">
-        <div class="card-body">
-          <h3 class="card-title">Total Pendapatan</h3>
-          <p class="card-text fs-3 fw-bold">Rp <?php echo number_format($total_pendapatan, 0, ',', '.'); ?></p>
-          <small class="text-muted">+<?php echo round(($total_pendapatan / 1000000) * 100, 0); ?>% dari bulan lalu</small>
+<?php if ($section === 'dashboard'): ?>
+    <div class="stats d-flex gap-3 mb-4 flex-wrap">
+        <div class="card flex-fill text-center bg-dark text-light">
+            <div class="card-body">
+                <h3 class="card-title">Total Pendapatan</h3>
+                <p class="card-text fs-3 fw-bold">Rp <?php echo number_format($total_pendapatan, 0, ',', '.'); ?></p>
+                <small class="text-muted">+<?php echo round(($total_pendapatan / 1000000) * 100, 0); ?>% dari bulan lalu</small>
+            </div>
         </div>
-      </div>
-      <div class="card flex-fill text-center">
-        <div class="card-body">
-          <h3 class="card-title">Total Pesanan</h3>
-          <p class="card-text fs-3 fw-bold"><?php echo $total_pesanan; ?></p>
-          <small class="text-muted">+<?php echo round(($total_pesanan / 100) * 100, 0); ?>% dari bulan lalu</small>
+        <div class="card flex-fill text-center bg-dark text-light">
+            <div class="card-body">
+                <h3 class="card-title">Total Pesanan</h3>
+                <p class="card-text fs-3 fw-bold"><?php echo $total_pesanan; ?></p>
+                <small class="text-muted">+<?php echo round(($total_pesanan / 100) * 100, 0); ?>% dari bulan lalu</small>
+            </div>
         </div>
-      </div>
-      <div class="card flex-fill text-center">
-        <div class="card-body">
-          <h3 class="card-title">Pelanggan Baru</h3>
-          <p class="card-text fs-3 fw-bold"><?php echo $pelanggan_baru; ?></p>
-          <small class="text-muted">+<?php echo $pelanggan_baru > 0 ? $pelanggan_baru * 10 : 0; ?>% dari bulan lalu</small>
+        <div class="card flex-fill text-center bg-dark text-light">
+            <div class="card-body">
+                <h3 class="card-title">Pelanggan Baru</h3>
+                <p class="card-text fs-3 fw-bold"><?php echo $pelanggan_baru; ?></p>
+                <small class="text-muted">+<?php echo $pelanggan_baru > 0 ? $pelanggan_baru * 10 : 0; ?>% dari bulan lalu</small>
+            </div>
         </div>
-      </div>
-      <div class="card flex-fill text-center">
-        <div class="card-body">
-          <h3 class="card-title">Rating</h3>
-          <p class="card-text fs-3 fw-bold"><?php echo $rating; ?></p>
-          <small class="text-muted">+<?php echo $rating > 0 ? 0.2 : 0; ?> dari bulan lalu</small>
+        <div class="card flex-fill text-center bg-dark text-light">
+            <div class="card-body">
+                <h3 class="card-title">Pesanan Dibatalkan</h3>
+                <p class="card-text fs-3 fw-bold"><?php echo $pesanan_dibatalkan; ?></p>
+                <small class="text-muted">+<?php echo $pesanan_dibatalkan > 0 ? $pesanan_dibatalkan * 5 : 0; ?>% dari bulan lalu</small>
+            </div>
         </div>
-      </div>
     </div>
 
     <div class="recent-orders">
         <h3>Pesanan Terbaru</h3>
-        <table class="table table-striped">
+        <table class="table table-dark table-striped">
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Pelanggan</th>
                     <th>Menu</th>
                     <th>Area</th>
                     <th>Nomor Meja</th>
@@ -873,24 +1067,43 @@ if ($stmt) {
                 </tr>
             </thead>
             <tbody>
-                <?php if (empty($recent_orders)): ?>
-                <tr><td colspan="7" class="text-center">Belum ada pesanan.</td></tr>
+                <?php
+                // Mengambil 5 pesanan terbaru dengan urutan teratas sebagai yang paling baru
+                $recent_orders = [];
+                $query = "SELECT p.id_pesanan, m.nama_menu as menu, a.nama_area, a.nomor_meja, (p.jumlah * m.harga) as total_harga, p.status_pesanan
+                          FROM pesanan p
+                          JOIN menu m ON p.id_menu = m.id_menu
+                          LEFT JOIN area a ON p.id_area = a.id_area
+                          WHERE p.status_pesanan = 'dipesan'
+                          ORDER BY p.tanggal_pesanan DESC LIMIT 5";
+
+                $result = $conn->query($query);
+                if ($result) {
+                    while ($row = $result->fetch_assoc()) {
+                        $recent_orders[] = $row;
+                    }
+                    $result->free();
+                }
+
+                if (empty($recent_orders)): ?>
+                    <tr><td colspan="6" class="text-center">Belum ada pesanan.</td></tr>
                 <?php else: ?>
-                <?php foreach ($recent_orders as $order): ?>
-                <tr>
-                    <td>#<?php echo htmlspecialchars($order['id_pesanan']); ?></td>
-                    <td><?php echo htmlspecialchars($order['nama_lengkap']); ?></td>
-                    <td><?php echo htmlspecialchars($order['menu']); ?></td>
-                    <td><?php echo htmlspecialchars($order['nama_area'] ?? 'Tidak ada area'); ?></td>
-                    <td><?php echo htmlspecialchars($order['nomor_meja'] ?? 'Tidak ada nomor'); ?></td>
-                    <td>Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
-                    <td><?php echo htmlspecialchars($order['status']); ?></td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php foreach ($recent_orders as $order): ?>
+                    <tr>
+                        <td>#<?php echo htmlspecialchars($order['id_pesanan']); ?></td>
+                        <td><?php echo htmlspecialchars($order['menu']); ?></td>
+                        <td><?php echo htmlspecialchars($order['nama_area'] ?? 'Tidak ada area'); ?></td>
+                        <td><?php echo htmlspecialchars($order['nomor_meja'] ?? 'Tidak ada nomor'); ?></td>
+                        <td>Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
+                        <td><?php echo htmlspecialchars($order['status_pesanan']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+
+
 
     <?php elseif ($section === 'kelola_menu'): ?>
     <h3>Tambah Menu Baru</h3>
@@ -899,15 +1112,15 @@ if ($stmt) {
       <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
       <div class="mb-3">
         <label for="nama_menu" class="form-label">Nama Menu</label>
-        <input type="text" class="form-control" id="nama_menu" name="nama_menu" required>
+        <input type="text" class="form-control bg-dark text-light" id="nama_menu" name="nama_menu" required>
       </div>
       <div class="mb-3">
         <label for="harga" class="form-label">Harga (Rp)</label>
-        <input type="number" class="form-control" id="harga" name="harga" step="0.01" required>
+        <input type="number" class="form-control bg-dark text-light" id="harga" name="harga" step="0.01" required>
       </div>
       <div class="mb-3">
         <label for="kategori" class="form-label">Kategori</label>
-        <select class="form-select" id="kategori" name="kategori" required>
+        <select class="form-select bg-dark text-light" id="kategori" name="kategori" required>
           <option value="">Pilih Kategori</option>
           <option value="Makanan">Makanan</option>
           <option value="Minuman">Minuman</option>
@@ -916,22 +1129,22 @@ if ($stmt) {
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>
-        <textarea class="form-control" id="deskripsi" name="deskripsi"></textarea>
+        <textarea class="form-control bg-dark text-light" id="deskripsi" name="deskripsi"></textarea>
       </div>
       <div class="mb-3">
         <label for="stok" class="form-label">Stok Awal</label>
-        <input type="number" class="form-control" id="stok" name="stok" required min="0">
+        <input type="number" class="form-control bg-dark text-light" id="stok" name="stok" required min="0">
       </div>
       <div class="mb-3">
         <label for="tersedia" class="form-label">Status Ketersediaan</label>
-        <select class="form-select" id="tersedia" name="tersedia" required>
+        <select class="form-select bg-dark text-light" id="tersedia" name="tersedia" required>
           <option value="1">Tersedia</option>
           <option value="0">Tidak Tersedia</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="gambar_menu" class="form-label">Gambar Menu (Max 50MB, JPEG/PNG/GIF)</label>
-        <input type="file" class="form-control" id="gambar_menu" name="gambar_menu" accept="image/jpeg,image/png,image/gif">
+        <input type="file" class="form-control bg-dark text-light" id="gambar_menu" name="gambar_menu" accept="image/jpeg,image/png,image/gif">
       </div>
       <button type="submit" class="btn btn-primary">Tambah Menu</button>
     </form>
@@ -944,15 +1157,15 @@ if ($stmt) {
       <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
       <div class="mb-3">
         <label for="nama_menu" class="form-label">Nama Menu</label>
-        <input type="text" class="form-control" id="nama_menu" name="nama_menu" value="<?php echo htmlspecialchars($edit_menu['nama_menu']); ?>" required>
+        <input type="text" class="form-control bg-dark text-light" id="nama_menu" name="nama_menu" value="<?php echo htmlspecialchars($edit_menu['nama_menu']); ?>" required>
       </div>
       <div class="mb-3">
         <label for="harga" class="form-label">Harga (Rp)</label>
-        <input type="number" class="form-control" id="harga" name="harga" step="0.01" value="<?php echo htmlspecialchars($edit_menu['harga']); ?>" required>
+        <input type="number" class="form-control bg-dark text-light" id="harga" name="harga" step="0.01" value="<?php echo htmlspecialchars($edit_menu['harga']); ?>" required>
       </div>
       <div class="mb-3">
         <label for="kategori" class="form-label">Kategori</label>
-        <select class="form-select" id="kategori" name="kategori" required>
+        <select class="form-select bg-dark text-light" id="kategori" name="kategori" required>
           <option value="Makanan" <?php echo $edit_menu['kategori'] === 'Makanan' ? 'selected' : ''; ?>>Makanan</option>
           <option value="Minuman" <?php echo $edit_menu['kategori'] === 'Minuman' ? 'selected' : ''; ?>>Minuman</option>
           <option value="Dessert" <?php echo $edit_menu['kategori'] === 'Dessert' ? 'selected' : ''; ?>>Dessert</option>
@@ -960,28 +1173,28 @@ if ($stmt) {
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>
-        <textarea class="form-control" id="deskripsi" name="deskripsi"><?php echo htmlspecialchars($edit_menu['deskripsi']); ?></textarea>
+        <textarea class="form-control bg-dark text-light" id="deskripsi" name="deskripsi"><?php echo htmlspecialchars($edit_menu['deskripsi']); ?></textarea>
       </div>
       <div class="mb-3">
         <label for="stok" class="form-label">Stok</label>
-        <input type="number" class="form-control" id="stok" name="stok" value="<?php echo htmlspecialchars($edit_menu['stok']); ?>" required min="0">
+        <input type="number" class="form-control bg-dark text-light" id="stok" name="stok" value="<?php echo htmlspecialchars($edit_menu['stok']); ?>" required min="0">
       </div>
       <div class="mb-3">
         <label for="tersedia" class="form-label">Status Ketersediaan</label>
-        <select class="form-select" id="tersedia" name="tersedia" required>
+        <select class="form-select bg-dark text-light" id="tersedia" name="tersedia" required>
           <option value="1" <?php echo $edit_menu['tersedia'] ? 'selected' : ''; ?>>Tersedia</option>
           <option value="0" <?php echo !$edit_menu['tersedia'] ? 'selected' : ''; ?>>Tidak Tersedia</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="gambar_menu" class="form-label">Gambar Menu (Max 50MB, Biarkan kosong jika tidak ingin mengganti)</label>
-        <input type="file" class="form-control" id="gambar_menu" name="gambar_menu" accept="image/jpeg,image/png,image/gif">
+        <input type="file" class="form-control bg-dark text-light" id="gambar_menu" name="gambar_menu" accept="image/jpeg,image/png,image/gif">
         <?php
         $image_path = !empty($edit_menu['gambar_menu']) && $edit_menu['gambar_menu'] !== '0' ? '../' . $edit_menu['gambar_menu'] : '';
         if (!empty($image_path) && file_exists($image_path)): ?>
         <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($edit_menu['nama_menu']); ?>" class="mt-2" style="max-width: 200px;">
         <?php else: ?>
-        <div class="bg-light text-center mt-2" style="max-width: 200px; height: 100px; display: flex; align-items: center; justify-content: center;">
+        <div class="bg-dark text-center mt-2 border" style="max-width: 200px; height: 100px; display: flex; align-items: center; justify-content: center;">
           <span class="text-muted"><?php echo !empty($edit_menu['gambar_menu']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($edit_menu['gambar_menu']) : 'Tidak ada gambar'; ?></span>
         </div>
         <?php endif; ?>
@@ -992,14 +1205,14 @@ if ($stmt) {
 
     <?php elseif ($section === 'view_menu' && $view_menu): ?>
     <h3>Detail Menu</h3>
-    <div class="card mb-4">
+    <div class="card mb-4 bg-dark text-light">
       <div class="card-body">
         <?php
         $image_path = !empty($view_menu['gambar_menu']) && $view_menu['gambar_menu'] !== '0' ? '../' . $view_menu['gambar_menu'] : '';
         if (!empty($image_path) && file_exists($image_path)): ?>
         <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($view_menu['nama_menu']); ?>" class="mb-3" style="max-width: 300px; border-radius: 5px;">
         <?php else: ?>
-        <div class="bg-light text-center mb-3" style="width: 300px; height: 200px; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+        <div class="bg-dark text-center mb-3 border" style="width: 300px; height: 200px; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
           <span class="text-muted"><?php echo !empty($view_menu['gambar_menu']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($view_menu['gambar_menu']) : 'Tidak ada gambar'; ?></span>
         </div>
         <?php endif; ?>
@@ -1018,6 +1231,7 @@ if ($stmt) {
     <?php elseif ($section === 'menu'): ?>
     <h3>Daftar Menu</h3>
     <?php
+    // Mengambil semua item menu dan mengelompokkannya berdasarkan kategori
     $menu_items = [];
     $result = $conn->query("SELECT * FROM menu ORDER BY kategori, nama_menu");
     if ($result) {
@@ -1040,13 +1254,13 @@ if ($stmt) {
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <?php foreach ($menu_items[$category] as $menu): ?>
       <div class="col">
-        <div class="card h-100 menu-card position-relative">
+        <div class="card h-100 menu-card position-relative bg-dark text-light">
           <?php if ($menu['stok'] == 0): ?>
           <form method="POST" action="" class="restock-btn">
             <input type="hidden" name="action" value="restock">
             <input type="hidden" name="id_menu" value="<?php echo $menu['id_menu']; ?>">
             <div class="input-group input-group-sm">
-              <input type="number" name="restock_amount" class="form-control" placeholder="Jumlah" min="1" required>
+              <input type="number" name="restock_amount" class="form-control bg-dark text-light" placeholder="Jumlah" min="1" required>
               <button type="submit" class="btn btn-warning btn-sm">Restok</button>
             </div>
           </form>
@@ -1057,7 +1271,7 @@ if ($stmt) {
             if (!empty($image_path) && file_exists($image_path)): ?>
             <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($menu['nama_menu']); ?>" class="card-img-top" style="height: 150px; object-fit: cover;">
             <?php else: ?>
-            <div class="bg-light text-center" style="height: 150px; display: flex; align-items: center; justify-content: center;">
+            <div class="bg-dark text-center border" style="height: 150px; display: flex; align-items: center; justify-content: center;">
               <span class="text-muted"><?php echo !empty($menu['gambar_menu']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($menu['gambar_menu']) : 'Tidak ada gambar'; ?></span>
             </div>
             <?php endif; ?>
@@ -1091,7 +1305,7 @@ if ($stmt) {
       <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
       <div class="mb-3">
         <label for="nama_area" class="form-label">Nama Area</label>
-        <input type="text" class="form-control" id="nama_area" name="nama_area" required>
+        <input type="text" class="form-control bg-dark text-light" id="nama_area" name="nama_area" required>
       </div>
       <div class="mb-3">
         <label for="nomor_meja" class="form-label">Pilih Nomor Meja</label>
@@ -1108,22 +1322,22 @@ if ($stmt) {
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>
-        <textarea class="form-control" id="deskripsi" name="deskripsi"></textarea>
+        <textarea class="form-control bg-dark text-light" id="deskripsi" name="deskripsi"></textarea>
       </div>
       <div class="mb-3">
         <label for="kapasitas" class="form-label">Kapasitas (Jumlah Orang)</label>
-        <input type="number" class="form-control" id="kapasitas" name="kapasitas" required min="1">
+        <input type="number" class="form-control bg-dark text-light" id="kapasitas" name="kapasitas" required min="1">
       </div>
       <div class="mb-3">
         <label for="tersedia" class="form-label">Status Ketersediaan</label>
-        <select class="form-select" id="tersedia" name="tersedia" required>
+        <select class="form-select bg-dark text-light" id="tersedia" name="tersedia" required>
           <option value="1">Tersedia</option>
           <option value="0">Penuh</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="gambar_area" class="form-label">Gambar Area (Max 50MB, JPEG/PNG/GIF)</label>
-        <input type="file" class="form-control" id="gambar_area" name="gambar_area" accept="image/jpeg,image/png,image/gif">
+        <input type="file" class="form-control bg-dark text-light" id="gambar_area" name="gambar_area" accept="image/jpeg,image/png,image/gif">
       </div>
       <button type="submit" class="btn btn-primary">Tambah Area</button>
     </form>
@@ -1136,7 +1350,7 @@ if ($stmt) {
       <input type="hidden" name="MAX_FILE_SIZE" value="52428800">
       <div class="mb-3">
         <label for="nama_area" class="form-label">Nama Area</label>
-        <input type="text" class="form-control" id="nama_area" name="nama_area" value="<?php echo htmlspecialchars($edit_area['nama_area']); ?>" required>
+        <input type="text" class="form-control bg-dark text-light" id="nama_area" name="nama_area" value="<?php echo htmlspecialchars($edit_area['nama_area']); ?>" required>
       </div>
       <div class="mb-3">
         <label for="nomor_meja" class="form-label">Pilih Nomor Meja</label>
@@ -1154,28 +1368,28 @@ if ($stmt) {
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>
-        <textarea class="form-control" id="deskripsi" name="deskripsi"><?php echo htmlspecialchars($edit_area['deskripsi']); ?></textarea>
+        <textarea class="form-control bg-dark text-light" id="deskripsi" name="deskripsi"><?php echo htmlspecialchars($edit_area['deskripsi']); ?></textarea>
       </div>
       <div class="mb-3">
         <label for="kapasitas" class="form-label">Kapasitas (Jumlah Orang)</label>
-        <input type="number" class="form-control" id="kapasitas" name="kapasitas" value="<?php echo htmlspecialchars($edit_area['kapasitas']); ?>" required min="1">
+        <input type="number" class="form-control bg-dark text-light" id="kapasitas" name="kapasitas" value="<?php echo htmlspecialchars($edit_area['kapasitas']); ?>" required min="1">
       </div>
       <div class="mb-3">
         <label for="tersedia" class="form-label">Status Ketersediaan</label>
-        <select class="form-select" id="tersedia" name="tersedia" required>
+        <select class="form-select bg-dark text-light" id="tersedia" name="tersedia" required>
           <option value="1" <?php echo $edit_area['tersedia'] ? 'selected' : ''; ?>>Tersedia</option>
           <option value="0" <?php echo !$edit_area['tersedia'] ? 'selected' : ''; ?>>Penuh</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="gambar_area" class="form-label">Gambar Area (Max 50MB, Biarkan kosong jika tidak ingin mengganti)</label>
-        <input type="file" class="form-control" id="gambar_area" name="gambar_area" accept="image/jpeg,image/png,image/gif">
+        <input type="file" class="form-control bg-dark text-light" id="gambar_area" name="gambar_area" accept="image/jpeg,image/png,image/gif">
         <?php
         $image_path = !empty($edit_area['gambar_area']) && $edit_area['gambar_area'] !== '0' ? '../' . $edit_area['gambar_area'] : '';
         if (!empty($image_path) && file_exists($image_path)): ?>
         <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($edit_area['nama_area']); ?>" class="mt-2" style="max-width: 200px;">
         <?php else: ?>
-        <div class="bg-light text-center mt-2" style="max-width: 200px; height: 100px; display: flex; align-items: center; justify-content: center;">
+        <div class="bg-dark text-center mt-2 border" style="max-width: 200px; height: 100px; display: flex; align-items: center; justify-content: center;">
           <span class="text-muted"><?php echo !empty($edit_area['gambar_area']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($edit_area['gambar_area']) : 'Tidak ada gambar'; ?></span>
         </div>
         <?php endif; ?>
@@ -1184,23 +1398,24 @@ if ($stmt) {
       <a href="?section=daftar_area" class="btn btn-secondary">Kembali</a>
     </form>
 
-    <?php elseif ($section === 'view_area' && $view_area): ?>
+<?php elseif ($section === 'view_area' && $view_area): ?>
     <h3>Detail Area</h3>
-    <div class="card mb-4">
+    <div class="card mb-4 bg-dark text-light">
       <div class="card-body">
         <?php
+        // Memeriksa apakah gambar area tersedia dan valid
         $image_path = !empty($view_area['gambar_area']) && $view_area['gambar_area'] !== '0' ? '../' . $view_area['gambar_area'] : '';
         if (!empty($image_path) && file_exists($image_path)): ?>
         <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($view_area['nama_area']); ?>" class="mb-3" style="max-width: 300px; border-radius: 5px;">
         <?php else: ?>
-        <div class="bg-light text-center mb-3" style="width: 300px; height: 200px; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+        <div class="bg-dark text-center mb-3 border" style="width: 300px; height: 200px; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
           <span class="text-muted"><?php echo !empty($view_area['gambar_area']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($view_area['gambar_area']) : 'Tidak ada gambar'; ?></span>
         </div>
         <?php endif; ?>
         <h5 class="card-title"><?php echo htmlspecialchars($view_area['nama_area']); ?></h5>
         <p class="card-text"><strong>Nomor Meja:</strong> <?php echo htmlspecialchars($view_area['nomor_meja']); ?></p>
-        <p class="card-text"><strong>Deskripsi:</strong> <?php echo htmlspecialchars($view_area['deskripsi'] ?: 'Tidak ada deskripsi'); ?></p>
         <p class="card-text"><strong>Kapasitas:</strong> <?php echo htmlspecialchars($view_area['kapasitas']); ?> orang</p>
+        <p class="card-text"><strong>Deskripsi:</strong> <?php echo htmlspecialchars($view_area['deskripsi'] ?: 'Tidak ada deskripsi'); ?></p>
         <p class="card-text"><strong>Status:</strong> <span class="badge <?php echo $view_area['tersedia'] ? 'bg-success' : 'bg-danger'; ?>">
           <?php echo $view_area['tersedia'] ? 'Tersedia' : 'Penuh'; ?></span></p>
         <a href="?section=edit_area&id_area=<?php echo $view_area['id_area']; ?>" class="btn btn-primary">Edit</a>
@@ -1208,22 +1423,25 @@ if ($stmt) {
       </div>
     </div>
 
-    <?php elseif ($section === 'daftar_area'): ?>
+<?php elseif ($section === 'daftar_area'): ?>
     <h3>Daftar Area</h3>
-    <?php if (empty($areas)): ?>
+    <?php
+    // Mengambil semua area untuk ditampilkan
+    if (empty($areas)): ?>
     <div class="alert alert-info">Belum ada area yang ditambahkan.</div>
     <?php else: ?>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <?php foreach ($areas as $area): ?>
       <div class="col">
-        <div class="card h-100 area-card">
+        <div class="card h-100 area-card bg-dark text-light">
           <div class="card-body">
             <?php
+            // Memeriksa apakah gambar area tersedia
             $image_path = !empty($area['gambar_area']) && $area['gambar_area'] !== '0' ? '../' . $area['gambar_area'] : '';
             if (!empty($image_path) && file_exists($image_path)): ?>
             <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($area['nama_area']); ?>" class="card-img-top" style="height: 150px; object-fit: cover;">
             <?php else: ?>
-            <div class="bg-light text-center" style="height: 150px; display: flex; align-items: center; justify-content: center;">
+            <div class="bg-dark text-center border" style="height: 150px; display: flex; align-items: center; justify-content: center;">
               <span class="text-muted"><?php echo !empty($area['gambar_area']) ? 'Gambar tidak ditemukan: ' . htmlspecialchars($area['gambar_area']) : 'Tidak ada gambar'; ?></span>
             </div>
             <?php endif; ?>
@@ -1248,88 +1466,167 @@ if ($stmt) {
     </div>
     <?php endif; ?>
 
-    <?php elseif ($section === 'kelola_akun'): ?>
-    <h3>Data Pengguna</h3>
-    <div class="user-table mb-4">
-      <table class="table table-striped">
+<?php elseif ($section === 'cancelled_orders'): ?>
+    <h3>Pesanan Dibatalkan</h3>
+    <table class="table table-dark table-striped">
         <thead>
-          <tr>
-            <th>ID User</th>
-            <th>Nama</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Aktif</th>
-          </tr>
+            <tr>
+                <th>Order ID</th>
+                <th>Menu</th>
+                <th>Area</th>
+                <th>Nomor Meja</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
         </thead>
         <tbody>
-          <?php if (empty($users)): ?>
-          <tr><td colspan="6" class="text-center">Belum ada pengguna.</td></tr>
-          <?php else: ?>
-          <?php foreach ($users as $user): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($user['id_user']); ?></td>
-            <td><?php echo htmlspecialchars($user['nama'] ?? 'N/A'); ?></td>
-            <td><?php echo htmlspecialchars($user['username']); ?></td>
-            <td><?php echo htmlspecialchars($user['email']); ?></td>
-            <td><?php echo htmlspecialchars($user['role']); ?></td>
-            <td><?php echo $user['aktif'] ? 'Ya' : 'Tidak'; ?></td>
-          </tr>
-          <?php endforeach; ?>
-          <?php endif; ?>
-        </tbody>
-      </table>
-    </div>
+            <?php
+            $cancelled_orders = [];
+            $query = "SELECT p.id_pesanan,m.nama_menu as menu, a.nama_area, a.nomor_meja, (p.jumlah * m.harga) as total_harga, p.status_pesanan
+                      FROM pesanan p
+                      JOIN menu m ON p.id_menu = m.id_menu
+                      LEFT JOIN area a ON p.id_area = a.id_area
+                      WHERE p.status_pesanan = 'cancelled'
+                      ORDER BY p.tanggal_pesanan DESC";
 
-    <h3>Data Pelanggan</h3>
-    <div class="customer-table">
-      <table class="table table-striped">
+            $result = $conn->query($query);
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    $cancelled_orders[] = $row;
+                }
+                $result->free();
+            }
+
+            if (empty($cancelled_orders)): ?>
+                <tr><td colspan="7" class="text-center">Belum ada pesanan yang dibatalkan.</td></tr>
+            <?php else: ?>
+                <?php foreach ($cancelled_orders as $order): ?>
+                <tr>
+                    <td>#<?php echo htmlspecialchars($order['id_pesanan']); ?></td>
+                    <td><?php echo htmlspecialchars($order['menu']); ?></td>
+                    <td><?php echo htmlspecialchars($order['nama_area'] ?? 'Tidak ada area'); ?></td>
+                    <td><?php echo htmlspecialchars($order['nomor_meja'] ?? 'Tidak ada nomor'); ?></td>
+                    <td>Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
+                    <td><?php echo htmlspecialchars($order['status_pesanan']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+
+<?php elseif ($section === 'kelola_akun'): ?>
+    <h3>Kelola Akun</h3>
+    <h4>Pengguna</h4>
+    <?php
+    // Menampilkan daftar pengguna dengan opsi untuk mengubah peran
+    if (empty($users)): ?>
+    <div class="alert alert-info">Belum ada pengguna yang terdaftar.</div>
+    <?php else: ?>
+    <table class="table table-dark table-striped">
         <thead>
-          <tr>
-            <th>ID Customer</th>
-            <th>Nama Lengkap</th>
-            <th>Email</th>
-            <th>No HP</th>
-            <th>Tanggal Daftar</th>
-          </tr>
+            <tr>
+                <th>ID Pengguna</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Peran</th>
+                <th>Aksi</th>
+            </tr>
         </thead>
         <tbody>
-          <?php if (empty($customers)): ?>
-          <tr><td colspan="5" class="text-center">Belum ada pelanggan.</td></tr>
-          <?php else: ?>
-          <?php foreach ($customers as $customer): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($customer['id_customer']); ?></td>
-            <td><?php echo htmlspecialchars($customer['nama_lengkap']); ?></td>
-            <td><?php echo htmlspecialchars($customer['email']); ?></td>
-            <td><?php echo htmlspecialchars($customer['no_hp']); ?></td>
-            <td><?php echo htmlspecialchars($customer['tanggal_daftar']); ?></td>
-          </tr>
-          <?php endforeach; ?>
-          <?php endif; ?>
+            <?php foreach ($users as $user): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($user['id_user']); ?></td>
+                <td><?php echo htmlspecialchars($user['username']); ?></td>
+                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                <td><?php echo htmlspecialchars($user['role'] ?: 'customer'); ?></td>
+                <td>
+                    <form method="POST" action="" class="d-inline">
+                        <input type="hidden" name="action" value="update_role">
+                        <input type="hidden" name="id_user" value="<?php echo $user['id_user']; ?>">
+                        <select name="role" class="form-select form-select-sm bg-dark text-light d-inline-block w-auto" onchange="this.form.submit()">
+                            <option value="admin" <?php echo ($user['role'] === 'admin' || (empty($user['role']) && false)) ? 'selected' : ''; ?>>Admin</option>
+                            <option value="chef" <?php echo $user['role'] === 'chef' ? 'selected' : ''; ?>>Chef</option>
+                            <option value="kasir" <?php echo $user['role'] === 'kasir' ? 'selected' : ''; ?>>Kasir</option>
+                            <option value="customer" <?php echo empty($user['role']) || $user['role'] === 'Tidak ada peran' ? 'selected' : ''; ?>>Customer</option>
+                        </select>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
         </tbody>
-      </table>
-    </div>
+    </table>
     <?php endif; ?>
-  </div>
+
+    <h4 class="mt-5">Pelanggan</h4>
+    <?php
+    // Menampilkan daftar pelanggan (tanpa peran)
+    if (empty($customers)): ?>
+    <div class="alert alert-info">Belum ada pelanggan yang terdaftar.</div>
+    <?php else: ?>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>ID Pelanggan</th>
+                <th>Nama Lengkap</th>
+                <th>Email</th>
+                <th>Nomor Telepon</th>
+                <th>Tanggal Daftar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($customers as $customer): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($customer['id_customer']); ?></td>
+                <td><?php echo htmlspecialchars($customer['nama_lengkap']); ?></td>
+                <td><?php echo htmlspecialchars($customer['email']); ?></td>
+                <td><?php echo htmlspecialchars($customer['no_hp'] ?: 'Tidak ada'); ?></td>
+                <td><?php echo htmlspecialchars($customer['tanggal_daftar']); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php endif; ?>
+<?php endif; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var toasts = document.querySelectorAll('.toast');
-      toasts.forEach(function (toast) {
+    // Menangani pemilihan nomor meja
+    function selectTable(element, isUsed, isCurrent = false) {
+      if (isUsed && !isCurrent) {
+        return; // Tidak bisa memilih meja yang sudah digunakan
+      }
+      const cells = document.querySelectorAll('.table-cell');
+      cells.forEach(cell => {
+        if (cell !== element && !cell.classList.contains('selected-red') && !cell.classList.contains('selected-green')) {
+          cell.classList.remove('selected');
+        }
+      });
+      if (!element.classList.contains('selected-red') && !element.classList.contains('selected-green')) {
+        element.classList.toggle('selected');
+        const nomorMejaInput = document.getElementById('nomor_meja');
+        nomorMejaInput.value = element.classList.contains('selected') ? element.getAttribute('data-value') : '';
+      }
+    }
+
+    // Menginisialisasi nomor meja yang sudah dipilih saat edit
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectedCell = document.querySelector('.table-cell.selected');
+      if (selectedCell) {
+        const nomorMejaInput = document.getElementById('nomor_meja');
+        nomorMejaInput.value = selectedCell.getAttribute('data-value');
+      }
+
+      // Menginisialisasi toast
+      const toasts = document.querySelectorAll('.toast');
+      toasts.forEach(toast => {
         new bootstrap.Toast(toast).show();
       });
     });
 
-    function selectTable(element, isUsed, isCurrent = false) {
-      if (isUsed && !isCurrent) {
-        return;
-      }
-      document.querySelectorAll('.table-cell').forEach(cell => cell.classList.remove('selected'));
-      element.classList.add('selected');
-      document.getElementById('nomor_meja').value = element.getAttribute('data-value');
-    }
+    setInterval(() => {
+    location.reload(); // Merefresh halaman setiap 30 detik (sesuaikan waktunya)
+}, 30000); // 30000 milidetik = 30 detik
   </script>
 </body>
 </html>

@@ -223,33 +223,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_SERVER['HTTP_X_UPDATE_STAT
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-gold: #d4af37;
-            --accent-gold: #e6c74a;
-            --dark-bg: #0f172a;
-            --light-bg: #1e293b;
-            --text-light: #ffffff;
-            --text-muted: #d3d4db;
-            --text-highlight: #ffcc00;
-            --shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --button-bg: #ff8c00;
-            --button-bg-hover: #ffa500;
-            --error-bg: #dc3545;
-            --success-bg: #28a745;
-        }
+:root {
+        --primary-gold: #d4af37;
+        --accent-gold: #e6c74a;
+        --dark-bg: #0f172a;
+        --light-bg: #1e293b;
+        --text-light: #ffffff; /* Ensure this is white */
+        --text-muted: #ffffff; /* Change to white instead of light gray */
+        --text-highlight: #ffcc00;
+        --shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --button-bg: #ff8c00;
+        --button-bg-hover: #ffa500;
+        --error-bg: #dc3545;
+        --success-bg: #28a745;
+    }
 
         html, body { margin: 0; padding: 0; overflow-x: hidden !important; }
         * { box-sizing: border-box; }
         body::-webkit-scrollbar { display: none; }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to bottom, var(--dark-bg) 0%, var(--light-bg) 70%);
-            color: var(--text-light);
-            overflow-y: auto;
-            min-height: 100vh;
-        }
+body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to bottom, var(--dark-bg) 0%, var(--light-bg) 70%);
+        color: var(--text-light); /* Explicitly set to white */
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+
+    p {
+        color: var(--text-light); /* Explicitly set to white */
+        font-size: 1.1rem;
+        line-height: 1.6;
+        transition: color 0.3s ease;
+        margin: 0.5rem 0;
+        padding: 0 0.5rem;
+    }
+
+    .checklist-item {
+        color: var(--text-light); /* Explicitly set to white */
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 0 0.5rem;
+    }
+
+    /* Ensure labels and other text elements are white */
+    label {
+        color: var(--text-light); /* Explicitly set to white */
+    }
+
+    /* Ensure text-anchor class uses white or adjusts as needed */
+    .text-anchor {
+        color: var(--text-highlight); /* Keep highlight color but ensure readability */
+        font-weight: 700;
+    }
+
+    /* Additional adjustments for other text elements */
+    h4, h5, h6 {
+        color: var(--text-light); /* Ensure headings are white */
+    }
+
+    /* Override any specific styles that might set different colors */
+    .payment-option label {
+        color: var(--text-light); /* Ensure payment option labels are white */
+    }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.1); z-index: -1; }
 

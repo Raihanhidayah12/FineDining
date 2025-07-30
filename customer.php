@@ -966,7 +966,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </div>
 
 <!-- Make a Reservation -->
-<section class="py-5 text-center text-light" style="background: linear-gradient(to right, #1f1f1f, #3c3c3c);" data-aos="zoom-in">
+<section class="py-5 text-center text-light"  data-aos="zoom-in">
   <div class="container">
     <h2 class="fw-bold display-5">Reserve Your Experience</h2>
     <p class="lead mb-5">Secure your table for an unforgettable dining moment</p>
@@ -998,7 +998,7 @@ if (session_status() === PHP_SESSION_NONE) {
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<?php include 'includes/footer_customer.php'; ?>
 
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

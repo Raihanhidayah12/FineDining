@@ -1,683 +1,264 @@
 Received: Array
 (
-    [nama_area] => Window%20Side
-    [nomor_meja] => 3
-    [kapasitas] => 5
-    [date] => 2025-06-10
-    [time] => 22:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 2
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 2
-    [dessert] => Molten Lava Cake
-    [dessert_qty] => 2
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 500000
-    [deposit_amount] => 150000
-    [user_id] => 10
-    [created_at] => 2025-06-10 23:45:29
-)
-
-Success: Reservation saved with ID 81 Total Tagihan: 500000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-10
-    [time] => 22:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 42
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 5460000
-    [deposit_amount] => 1638000
-    [user_id] => 10
-    [created_at] => 2025-06-10 23:56:38
-)
-
-Success: Reservation saved with ID 82 Total Tagihan: 5460000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 1
-    [kapasitas] => 3
-    [date] => 2025-06-11
-    [time] => 21:00:00
+    [nama_area] => Garden%20View
+    [nomor_meja] => 5
+    [kapasitas] => 4
+    [date] => 2025-06-18
+    [time] => 17:00:00
     [food] => Chicken Cordon Bleu
     [food_qty] => 1
+    [drinks] => Vanilla Latte
+    [drinks_qty] => 1
+    [dessert] => Tiramisu
+    [dessert_qty] => 1
+    [decorationTheme] => 
+    [specialRequests] => 
+    [total_price] => 235000
+    [deposit_amount] => 70500
+    [user_id] => 7
+    [created_at] => 2025-06-18 06:15:31
+)
+
+Success: Reservation saved with ID 19 Total Tagihan: 235000
+Received: Array
+(
+    [nama_area] => Garden%20View
+    [nomor_meja] => 5
+    [kapasitas] => 4
+    [date] => 2025-06-18
+    [time] => 22:00:00
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 1
+    [drinks] => Sparkling Berry Elixir
+    [drinks_qty] => 1
+    [dessert] => Tiramisu
+    [dessert_qty] => 1
+    [decorationTheme] => 
+    [specialRequests] => 
+    [total_price] => 250000
+    [deposit_amount] => 75000
+    [user_id] => 7
+    [created_at] => 2025-06-18 06:22:43
+)
+
+Success: Reservation saved with ID 1 Total Tagihan: 250000
+Received: Array
+(
+    [nama_area] => Garden%20View
+    [nomor_meja] => 5
+    [kapasitas] => 4
+    [date] => 2025-06-18
+    [time] => 23:00:00
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 5
     [drinks] => Sparkling Berry Elixir
     [drinks_qty] => 1
     [dessert] => 
     [dessert_qty] => 
     [decorationTheme] => 
     [specialRequests] => 
-    [total_price] => 185000
-    [deposit_amount] => 55500
-    [user_id] => 10
-    [created_at] => 2025-06-11 00:03:41
+    [total_price] => 705000
+    [deposit_amount] => 211500
+    [user_id] => 7
+    [created_at] => 2025-06-18 06:25:05
 )
 
-Success: Reservation saved with ID 83 Total Tagihan: 185000
+Success: Reservation saved with ID 2 Total Tagihan: 705000
 Received: Array
 (
-    [nama_area] => Window%20Side
-    [nomor_meja] => 3
-    [kapasitas] => 5
-    [date] => 2025-06-11
-    [time] => 17:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 5
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 350000
-    [deposit_amount] => 105000
-    [user_id] => 10
-    [created_at] => 2025-06-11 00:13:50
-)
-
-Success: Reservation saved with ID 84 Total Tagihan: 350000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-11
+    [nama_area] => Terrace%20Seating
+    [nomor_meja] => 12
+    [kapasitas] => 4
+    [date] => 2025-06-18
     [time] => 22:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 67
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 3755000
-    [deposit_amount] => 1126500
-    [user_id] => 10
-    [created_at] => 2025-06-11 00:30:36
-)
-
-Success: Reservation saved with ID 85 Total Tagihan: 3755000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 1
-    [kapasitas] => 3
-    [date] => 2025-06-11
-    [time] => 21:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 67
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 3685000
-    [deposit_amount] => 1105500
-    [user_id] => 10
-    [created_at] => 2025-06-11 01:02:27
-)
-
-Success: Reservation saved with ID 86 Total Tagihan: 3685000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 1
-    [kapasitas] => 3
-    [date] => 2025-06-11
-    [time] => 22:00:00
-    [food] => 
-    [food_qty] => 
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 1
     [drinks] => Vanilla Latte
     [drinks_qty] => 1
     [dessert] => Crème Brûlée
     [dessert_qty] => 1
     [decorationTheme] => 
     [specialRequests] => 
-    [total_price] => 110000
-    [deposit_amount] => 33000
+    [total_price] => 240000
+    [deposit_amount] => 72000
     [user_id] => 7
-    [created_at] => 2025-06-11 01:24:20
+    [created_at] => 2025-06-18 06:26:30
 )
 
-Success: Reservation saved with ID 87 Total Tagihan: 110000
+Success: Reservation saved with ID 3 Total Tagihan: 240000
 Received: Array
 (
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-19
-    [time] => 22:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 67
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 3685000
-    [deposit_amount] => 1105500
-    [user_id] => 7
-    [created_at] => 2025-06-11 01:30:22
-)
-
-Success: Reservation saved with ID 88 Total Tagihan: 3685000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
+    [nama_area] => Terrace%20Seating
+    [nomor_meja] => 4
+    [kapasitas] => 2
     [date] => 2025-06-18
-    [time] => 22:00:00
-    [food] => Grilled Salmon Steak
-    [food_qty] => 100
+    [time] => 20:00:00
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 2
     [drinks] => 
     [drinks_qty] => 
     [dessert] => 
     [dessert_qty] => 
     [decorationTheme] => 
     [specialRequests] => 
-    [total_price] => 15000000
-    [deposit_amount] => 4500000
+    [total_price] => 260000
+    [deposit_amount] => 78000
     [user_id] => 7
-    [created_at] => 2025-06-11 01:49:03
+    [created_at] => 2025-06-18 09:27:29
 )
 
-Success: Reservation saved with ID 89 Total Tagihan: 15000000
+Success: Reservation saved with ID 4 Total Tagihan: 260000
+Received: Array
+(
+    [nama_area] => VIP%20Room
+    [nomor_meja] => 8
+    [kapasitas] => 10
+    [date] => 2025-06-19
+    [time] => 20:00:00
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 1
+    [drinks] => Lemon Mint Sparkle	(Non-Alkohol)
+    [drinks_qty] => 1
+    [dessert] => Crème Brûlée
+    [dessert_qty] => 1
+    [decorationTheme] => classic
+    [specialRequests] => bunga, lilin
+    [total_price] => 242000
+    [deposit_amount] => 72600
+    [user_id] => 10
+    [created_at] => 2025-06-19 12:57:06
+)
+
+Success: Reservation saved with ID 5 Total Tagihan: 242000
 Received: Array
 (
     [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-12
+    [nomor_meja] => 3
+    [kapasitas] => 5
+    [date] => 2025-06-30
+    [time] => 22:00:00
+    [food] => Chicken Cordon Bleu
+    [food_qty] => 1
+    [drinks] => Mocktail Berry Bliss (Non-Alkohol),Lemon Mint Sparkle	(Non-Alkohol),Espresso,Vanilla Latte,Sparkling Berry Elixir
+    [drinks_qty] => 1,1,1,1,1
+    [dessert] => Molten Lava Cake
+    [dessert_qty] => 1
+    [decorationTheme] => romantic
+    [specialRequests] => lilin 5
+    [total_price] => 407000
+    [deposit_amount] => 122100
+    [user_id] => 10
+    [created_at] => 2025-06-19 13:14:07
+)
+
+Success: Reservation saved with ID 6 Total Tagihan: 407000
+Received: Array
+(
+    [nama_area] => VIP%20Room
+    [nomor_meja] => 11
+    [kapasitas] => 20
+    [date] => 2025-06-19
+    [time] => 23:00:00
+    [food] => Main Course Beef Wellington
+    [food_qty] => 1
+    [drinks] => Mocktail Berry Bliss (Non-Alkohol)
+    [drinks_qty] => 1
+    [dessert] => Molten Lava Cake
+    [dessert_qty] => 1
+    [decorationTheme] => classic
+    [specialRequests] => lagu rock
+    [total_price] => 295000
+    [deposit_amount] => 88500
+    [user_id] => 10
+    [created_at] => 2025-06-19 13:24:10
+)
+
+Success: Reservation saved with ID 7 Total Tagihan: 295000
+Received: Array
+(
+    [nama_area] => VIP%20Room
+    [nomor_meja] => 8
+    [kapasitas] => 10
+    [date] => 2025-06-20
+    [time] => 20:00:00
+    [food] => Main Course Beef Wellington,Chicken Cordon Bleu
+    [food_qty] => 1,1
+    [drinks] => 
+    [drinks_qty] => 
+    [dessert] => 
+    [dessert_qty] => 
+    [decorationTheme] => modern
+    [specialRequests] => 
+    [total_price] => 315000
+    [deposit_amount] => 94500
+    [user_id] => 10
+    [created_at] => 2025-06-19 13:32:27
+)
+
+Success: Reservation saved with ID 8 Total Tagihan: 315000
+Received: Array
+(
+    [nama_area] => Window%20Side
+    [nomor_meja] => 3
+    [kapasitas] => 5
+    [date] => 2025-06-27
     [time] => 22:00:00
     [food] => 
     [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 8
+    [drinks] => Vanilla Latte
+    [drinks_qty] => 1
     [dessert] => 
     [dessert_qty] => 
-    [decorationTheme] => 
+    [decorationTheme] => romantic
     [specialRequests] => 
-    [total_price] => 440000
-    [deposit_amount] => 132000
+    [total_price] => 40000
+    [deposit_amount] => 12000
     [user_id] => 10
-    [created_at] => 2025-06-11 02:12:59
+    [created_at] => 2025-06-19 13:58:56
 )
 
-Success: Reservation saved with ID 90 Total Tagihan: 440000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-11
-    [time] => 21:00:00
-    [food] => Grilled Salmon Steak
-    [food_qty] => 10
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 1500000
-    [deposit_amount] => 450000
-    [user_id] => 10
-    [created_at] => 2025-06-11 02:30:45
-)
-
-Success: Reservation saved with ID 91 Total Tagihan: 1500000
+Success: Reservation saved with ID 9 Total Tagihan: 40000
 Received: Array
 (
     [nama_area] => Window%20Side
     [nomor_meja] => 2
     [kapasitas] => 1
     [date] => 2025-06-20
-    [time] => 19:00:00
-    [food] => Grilled Salmon Steak
+    [time] => 22:00:00
+    [food] => Chicken Cordon Bleu
     [food_qty] => 1
-    [drinks] => Sparkling Berry Elixir
+    [drinks] => Lemon Mint Sparkle	(Non-Alkohol)
     [drinks_qty] => 1
     [dessert] => Panna Cotta
     [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 265000
-    [deposit_amount] => 79500
+    [decorationTheme] => modern
+    [specialRequests] => saya mau waifu saya ada
+    [total_price] => 232000
+    [deposit_amount] => 69600
     [user_id] => 10
-    [created_at] => 2025-06-11 02:39:33
+    [created_at] => 2025-06-19 14:20:09
 )
 
-Success: Reservation saved with ID 92 Total Tagihan: 265000
+Success: Reservation saved with ID 10 Total Tagihan: 232000
 Received: Array
 (
-    [nama_area] => Window%20Side
-    [nomor_meja] => 1
-    [kapasitas] => 3
-    [date] => 2025-06-18
-    [time] => 22:00:00
-    [food] => Grilled Salmon Steak
-    [food_qty] => 99
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 14850000
-    [deposit_amount] => 4455000
-    [user_id] => 10
-    [created_at] => 2025-06-11 02:47:15
-)
-
-Success: Reservation saved with ID 93 Total Tagihan: 14850000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 3
-    [kapasitas] => 5
+    [nama_area] => VIP%20Room
+    [nomor_meja] => 10
+    [kapasitas] => 12
     [date] => 2025-06-19
-    [time] => 22:00:00
+    [time] => 21:00:00
     [food] => 
     [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 1
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 55000
-    [deposit_amount] => 16500
-    [user_id] => 10
-    [created_at] => 2025-06-11 02:52:52
-)
-
-Success: Reservation saved with ID 94 Total Tagihan: 55000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 6
-    [kapasitas] => 6
-    [date] => 2025-06-11
-    [time] => 14:00:00
-    [food] => Main Course Beef Wellington
-    [food_qty] => 1
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
+    [drinks] => Vanilla Latte
+    [drinks_qty] => 6
+    [dessert] => Crème Brûlée
+    [dessert_qty] => 3
     [decorationTheme] => modern
-    [specialRequests] => 
-    [total_price] => 185000
-    [deposit_amount] => 55500
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:05:51
-)
-
-Success: Reservation saved with ID 95 Total Tagihan: 185000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 5
-    [kapasitas] => 4
-    [date] => 2025-06-11
-    [time] => 19:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 1
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 55000
-    [deposit_amount] => 16500
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:16:18
-)
-
-Success: Reservation saved with ID 96 Total Tagihan: 55000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 6
-    [kapasitas] => 6
-    [date] => 2025-06-11
-    [time] => 19:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 1
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => romantic
-    [specialRequests] => 
-    [total_price] => 55000
-    [deposit_amount] => 16500
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:41:44
-)
-
-Success: Reservation saved with ID 97 Total Tagihan: 55000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 11
-    [kapasitas] => 20
-    [date] => 2025-06-11
-    [time] => 21:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => Sparkling Berry Elixir
-    [drinks_qty] => 63
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 3465000
-    [deposit_amount] => 1039500
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:47:54
-)
-
-Success: Reservation saved with ID 98 Total Tagihan: 3465000
-Invalid area or table: VIP Room, 6
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 8
-    [kapasitas] => 10
-    [date] => 2025-06-11
-    [time] => 14:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 70000
-    [deposit_amount] => 21000
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:51:12
-)
-
-Success: Reservation saved with ID 99 Total Tagihan: 70000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 10
-    [kapasitas] => 12
-    [date] => 2025-06-11
-    [time] => 22:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 70000
-    [deposit_amount] => 21000
-    [user_id] => 7
-    [created_at] => 2025-06-11 03:52:08
-)
-
-Success: Reservation saved with ID 100 Total Tagihan: 70000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-11
-    [time] => 21:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 1
-    [drinks] => Mocktail Berry Bliss (Non-Alkohol)
-    [drinks_qty] => 2
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 220000
-    [deposit_amount] => 66000
-    [user_id] => 7
-    [created_at] => 2025-06-11 05:11:40
-)
-
-Success: Reservation saved with ID 1 Total Tagihan: 220000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 7
-    [kapasitas] => 8
-    [date] => 2025-06-11
-    [time] => 20:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 2
-    [drinks] => Lemon Mint Sparkle	(Non-Alkohol)
-    [drinks_qty] => 2
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 344000
-    [deposit_amount] => 103200
+    [specialRequests] => birthday
+    [total_price] => 450000
+    [deposit_amount] => 135000
     [user_id] => 10
-    [created_at] => 2025-06-11 12:27:29
+    [created_at] => 2025-06-19 15:01:11
 )
 
-Success: Reservation saved with ID 2 Total Tagihan: 344000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 2
-    [kapasitas] => 1
-    [date] => 2025-06-11
-    [time] => 22:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 2
-    [drinks] => Mocktail Berry Bliss (Non-Alkohol)
-    [drinks_qty] => 2
-    [dessert] => Tiramisu
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 415000
-    [deposit_amount] => 124500
-    [user_id] => 7
-    [created_at] => 2025-06-11 14:23:26
-)
-
-Success: Reservation saved with ID 1 Total Tagihan: 415000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 6
-    [kapasitas] => 6
-    [date] => 2025-06-11
-    [time] => 15:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 3
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 390000
-    [deposit_amount] => 117000
-    [user_id] => 10
-    [created_at] => 2025-06-11 14:47:34
-)
-
-Success: Reservation saved with ID 2 Total Tagihan: 390000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 9
-    [kapasitas] => 10
-    [date] => 2025-06-11
-    [time] => 21:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 1
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 200000
-    [deposit_amount] => 60000
-    [user_id] => 10
-    [created_at] => 2025-06-11 15:43:07
-)
-
-Success: Reservation saved with ID 3 Total Tagihan: 200000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 5
-    [kapasitas] => 4
-    [date] => 2025-06-11
-    [time] => 20:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 1
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 130000
-    [deposit_amount] => 39000
-    [user_id] => 10
-    [created_at] => 2025-06-11 16:21:54
-)
-
-Success: Reservation saved with ID 4 Total Tagihan: 130000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 4
-    [kapasitas] => 2
-    [date] => 2025-06-11
-    [time] => 19:00:00
-    [food] => 
-    [food_qty] => 
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => 
-    [specialRequests] => 
-    [total_price] => 70000
-    [deposit_amount] => 21000
-    [user_id] => 10
-    [created_at] => 2025-06-11 18:08:11
-)
-
-Success: Reservation saved with ID 5 Total Tagihan: 70000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 11
-    [kapasitas] => 20
-    [date] => 2025-06-18
-    [time] => 20:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 1
-    [drinks] => 
-    [drinks_qty] => 
-    [dessert] => Crème Brûlée
-    [dessert_qty] => 1
-    [decorationTheme] => romantic
-    [specialRequests] => 
-    [total_price] => 200000
-    [deposit_amount] => 60000
-    [user_id] => 10
-    [created_at] => 2025-06-11 19:21:26
-)
-
-Success: Reservation saved with ID 6 Total Tagihan: 200000
-Received: Array
-(
-    [nama_area] => Terrace%20Seating
-    [nomor_meja] => 6
-    [kapasitas] => 6
-    [date] => 2025-06-11
-    [time] => 18:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 2
-    [drinks] => Mocktail Berry Bliss (Non-Alkohol)
-    [drinks_qty] => 1
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => modern
-    [specialRequests] => 
-    [total_price] => 305000
-    [deposit_amount] => 91500
-    [user_id] => 10
-    [created_at] => 2025-06-11 20:27:03
-)
-
-Success: Reservation saved with ID 7 Total Tagihan: 305000
-Received: Array
-(
-    [nama_area] => VIP%20Room
-    [nomor_meja] => 10
-    [kapasitas] => 12
-    [date] => 2025-06-26
-    [time] => 19:00:00
-    [food] => Chicken Cordon Bleu
-    [food_qty] => 5
-    [drinks] => Mocktail Berry Bliss (Non-Alkohol)
-    [drinks_qty] => 4
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => romantic
-    [specialRequests] => 
-    [total_price] => 830000
-    [deposit_amount] => 249000
-    [user_id] => 10
-    [created_at] => 2025-06-11 20:47:46
-)
-
-Success: Reservation saved with ID 8 Total Tagihan: 830000
-Received: Array
-(
-    [nama_area] => Window%20Side
-    [nomor_meja] => 3
-    [kapasitas] => 5
-    [date] => 2025-06-23
-    [time] => 19:00:00
-    [food] => Main Course Beef Wellington
-    [food_qty] => 2
-    [drinks] => Lemon Mint Sparkle	(Non-Alkohol)
-    [drinks_qty] => 2
-    [dessert] => 
-    [dessert_qty] => 
-    [decorationTheme] => festive
-    [specialRequests] => 
-    [total_price] => 454000
-    [deposit_amount] => 136200
-    [user_id] => 10
-    [created_at] => 2025-06-11 21:03:49
-)
-
-Success: Reservation saved with ID 9 Total Tagihan: 454000
+Success: Reservation saved with ID 11 Total Tagihan: 450000

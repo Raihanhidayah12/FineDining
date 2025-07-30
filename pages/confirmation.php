@@ -532,9 +532,9 @@ date_default_timezone_set('Asia/Jakarta');
                 <button class="btn btn-back" onclick="goBack()" aria-label="Go back to previous page">
                     <i class="fas fa-arrow-left me-2"></i> Back
                 </button>
-                <button class="btn btn-download" onclick="downloadSummary()" aria-label="Download reservation summary">
+                <!-- <button class="btn btn-download" onclick="downloadSummary()" aria-label="Download reservation summary">
                     <i class="fas fa-download me-2"></i> Download
-                </button>
+                </button> -->
                 <button class="btn btn-primary" id="confirmBtn" onclick="confirmReservation()" disabled aria-label="Confirm reservation">
                     Confirm <i class="fas fa-check ms-2"></i>
                 </button>

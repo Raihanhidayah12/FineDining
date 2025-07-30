@@ -382,7 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
 
             <div class="signUp-link" data-aos="fade-up" data-aos-delay="500">
-                <p>Already have an account? <a href="login.php">Login here</a></p>
+                <p>Already have an account? <a href="login.php">Sign In </a></p>
             </div>
         </form>
         <a href="index.php" class="btn-back" data-aos="fade-up" data-aos-delay="550"><i class="fas fa-arrow-left"></i> Back</a>

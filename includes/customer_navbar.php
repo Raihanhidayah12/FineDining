@@ -104,9 +104,6 @@ $display_picture = $profile_picture ? ($base_path . basename($profile_picture)) 
         <li class="nav-item">
           <a class="nav-link <?php echo $current_page == 'menu.php' ? 'active' : ''; ?>" href="/pages/menu.php">Menu</a>
         </li>
-                <li class="nav-item">
-          <a class="nav-link <?php echo $current_page == 'interiors.php' ? 'active' : ''; ?>" href="/pages/interior.php">Interiors</a>
-        </li>
         <li class="nav-item">
           <a class="nav-link <?php echo $current_page == 'myorder.php' ? 'active' : ''; ?>" href="/pages/myorder.php">My Orders</a>
         </li>

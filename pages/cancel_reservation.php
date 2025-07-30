@@ -1,45 +1,78 @@
 <?php
 session_start();
 include '../includes/config.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if (!isset($_SESSION['id_user'])) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Unauthorized']);
+error_log("cancel_reservation.php called: POST=" . print_r($_POST, true) . ", SESSION=" . print_r($_SESSION, true));
+
+if (!isset($_SESSION['id_user']) || !isset($_POST['id_reservasi']) || !isset($_POST['csrf_token'])) {
+    error_log("Invalid request: user_id=" . ($_SESSION['id_user'] ?? 'none') . ", id_reservasi=" . ($_POST['id_reservasi'] ?? 'none'));
+    echo "Error: Invalid request.";
     exit();
 }
 
-$reservation_id = isset($_POST['reservation_id']) ? intval($_POST['reservation_id']) : 0;
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    error_log("CSRF token mismatch: sent=" . ($_POST['csrf_token'] ?? 'none') . ", expected=" . ($_SESSION['csrf_token'] ?? 'none'));
+    echo "Error: Invalid CSRF token.";
+    exit();
+}
+
+$reservation_id = intval($_POST['id_reservasi']);
 $user_id = intval($_SESSION['id_user']);
 
-// Validate reservation belongs to user and is pending
-$stmt = $conn->prepare("SELECT id_pembayaran FROM pembayaran WHERE id_reservasi = ? AND status_payment = 'Pending Payment'");
-$stmt->bind_param("i", $reservation_id);
+// Query pemeriksaan disederhanakan untuk debugging
+$stmt = $conn->prepare("
+    SELECT r.id_area, r.payment_status, p.status_payment 
+    FROM reservasi r 
+    LEFT JOIN pembayaran p ON r.id_reservasi = p.id_reservasi 
+    WHERE r.id_reservasi = ? AND r.id_user = ?
+");
+$stmt->bind_param("ii", $reservation_id, $user_id);
 $stmt->execute();
-$check = $stmt->get_result();
+$result = $stmt->get_result()->fetch_assoc();
+error_log("Debug check: id_reservasi=$reservation_id, user_id=$user_id, result=" . print_r($result, true));
 $stmt->close();
 
-if ($check && $check->num_rows > 0) {
+if ($result) {
     $conn->begin_transaction();
     try {
-        $stmt_update = $conn->prepare("UPDATE pembayaran SET status_payment = 'Cancelled', tanggal_bayar = NOW() WHERE id_reservasi = ?");
-        $stmt_update->bind_param("i", $reservation_id);
-        $stmt_update->execute();
-        $stmt_update->close();
+        $stmt = $conn->prepare("UPDATE reservasi SET payment_status = 'Cancelled' WHERE id_reservasi = ?");
+        $stmt->bind_param("i", $reservation_id);
+        $stmt->execute();
+        error_log("Updated reservasi: " . $stmt->affected_rows . " rows");
+        $stmt->close();
 
-        $stmt_reservasi = $conn->prepare("UPDATE reservasi SET payment_status = 'Cancelled', tanggal_bayar = NOW() WHERE id_reservasi = ?");
-        $stmt_reservasi->bind_param("i", $reservation_id);
-        $stmt_reservasi->execute();
-        $stmt_reservasi->close();
+        $stmt = $conn->prepare("UPDATE pembayaran SET status_payment = 'Cancelled', jumlah_dibayar = 0, tanggal_bayar = NOW() WHERE id_reservasi = ?");
+        $stmt->bind_param("i", $reservation_id);
+        $stmt->execute();
+        error_log("Updated pembayaran: " . $stmt->affected_rows . " rows");
+        $stmt->close();
+
+        $stmt = $conn->prepare("UPDATE pesanan SET status_pesanan = 'Cancelled' WHERE id_reservasi = ?");
+        $stmt->bind_param("i", $reservation_id);
+        $stmt->execute();
+        error_log("Updated pesanan: " . $stmt->affected_rows . " rows");
+        $stmt->close();
+
+        $stmt = $conn->prepare("UPDATE area SET tersedia = 1 WHERE id_area = ?");
+        $stmt->bind_param("i", $result['id_area']);
+        $stmt->execute();
+        error_log("Updated area: " . $stmt->affected_rows . " rows");
+        $stmt->close();
 
         $conn->commit();
-        echo json_encode(['success' => 'Reservation cancelled']);
+        error_log("Cancellation committed for id_reservasi=$reservation_id");
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        echo "Success";
     } catch (Exception $e) {
         $conn->rollback();
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to cancel reservation: ' . $e->getMessage()]);
+        error_log("DB Error: " . $e->getMessage() . ", Code: " . $e->getCode());
+        echo "Error: Database error - " . htmlspecialchars($e->getMessage());
     }
 } else {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid reservation or already processed']);
+    error_log("Cancellation failed: Reservation not found or not cancellable, id_reservasi=$reservation_id");
+    echo "Error: Reservation not found or not cancellable.";
 }
 ?>

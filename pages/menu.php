@@ -1,22 +1,21 @@
 <?php include '../includes/header.php'; ?>
-<!-- // Memasukkan file header.php dari direktori includes yang berada satu level di atas folder saat ini.
-// File ini biasanya berisi elemen HTML awal seperti tag <html>, <head>, meta tags, dan mungkin navigasi. -->
+<!-- Menyertakan header.php dari direktori includes satu level di atas, yang biasanya berisi elemen HTML awal seperti <html>, <head>, meta tags, dan mungkin navigasi. -->
 
 <!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<!-- // Memuat file CSS Bootstrap 5 dari CDN untuk memberikan styling responsif dan komponen UI seperti grid, tombol, dan modal. -->
+<!-- Memuat CSS Bootstrap 5 dari CDN untuk memberikan styling responsif dan komponen UI seperti grid, tombol, dan modal. -->
 
 <!-- AOS Animation Library -->
 <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<!-- // Memuat CSS untuk library AOS (Animate On Scroll) yang digunakan untuk animasi elemen saat pengguna menggulir halaman. -->
+<!-- Memuat CSS untuk library AOS (Animate On Scroll) yang digunakan untuk animasi elemen saat pengguna menggulir halaman. -->
 
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-3B6N4N7H5F7D1F2D6G8H9I0J9K5L2F3G4H5J6K7L8M9N0O1P2Q3R4S5T6U7V8W" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<!-- // Memuat ikon Font Awesome versi 6 untuk elemen seperti ikon panah pada tombol "Back to Home". -->
+<!-- Memuat ikon Font Awesome versi 6 untuk elemen seperti ikon panah pada tombol "Back to Home". -->
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-<!-- // Memuat font Playfair Display (untuk judul elegan) dan Roboto (untuk teks biasa) dari Google Fonts dengan variasi berat font. -->
+<!-- Memuat font Playfair Display (untuk judul elegan) dan Roboto (untuk teks biasa) dari Google Fonts dengan variasi berat font. -->
 <link rel="icon" href="/assets/img/logo.png" type="image/gif" sizes="16x16">
 <style>
 :root {
@@ -28,7 +27,7 @@
   --text-muted: #d1d1d1;
   --navbar-bg: rgba(18, 18, 18, 0.95);
 }
-/* // Mendefinisikan variabel CSS untuk warna yang konsisten di seluruh halaman, seperti emas, latar gelap, dan teks putih. */
+/* Mendefinisikan variabel CSS untuk warna yang konsisten di seluruh halaman, seperti emas, latar gelap, dan teks putih. */
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -37,7 +36,7 @@ body {
   overflow-x: hidden;
   margin: 0;
 }
-/* // Mengatur gaya dasar body: font Roboto, latar belakang gelap, teks putih, mencegah overflow horizontal, dan menghapus margin default. */
+/* Mengatur gaya dasar body: font Roboto, latar belakang gelap, teks putih, mencegah overflow horizontal, dan menghapus margin default. */
 
 html, body {
   scrollbar-width: none;
@@ -46,7 +45,7 @@ html, body {
 html::-webkit-scrollbar {
   display: none;
 }
-/* // Menyembunyikan scrollbar di semua browser untuk tampilan lebih bersih. */
+/* Menyembunyikan scrollbar di semua browser untuk tampilan lebih bersih. */
 
 .navbar {
   background: var(--navbar-bg);
@@ -58,7 +57,7 @@ html::-webkit-scrollbar {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 1rem 2rem;
 }
-/* // Gaya untuk navbar (meskipun dikomentari tidak digunakan): latar semi-transparan dengan blur, posisi sticky, dan bayangan halus. */
+/* Gaya untuk navbar (meskipun dikomentari tidak digunakan): latar semi-transparan dengan blur, posisi sticky, dan bayangan halus. */
 
 .navbar-brand, .nav-link {
   font-family: 'Playfair Display', serif;
@@ -78,7 +77,7 @@ html::-webkit-scrollbar {
   color: var(--primary-gold) !important;
   transform: scale(1.05);
 }
-/* // Gaya untuk logo navbar dan tautan navigasi: font Playfair Display, warna putih, efek hover berubah ke emas dan membesar. */
+/* Gaya untuk logo navbar dan tautan navigasi: font Playfair Display, warna putih, efek hover berubah ke emas dan membesar. */
 
 .navbar-toggler {
   border: 2px solid var(--primary-gold);
@@ -87,13 +86,13 @@ html::-webkit-scrollbar {
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(212, 175, 55, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
-/* // Gaya untuk tombol toggler navbar (mobile): border emas dan ikon hamburger kustom berwarna emas. */
+/* Gaya untuk tombol toggler navbar (mobile): border emas dan ikon hamburger kustom berwarna emas. */
 
 .nav-item i {
   margin-left: 0.5rem;
   color: var(--primary-gold);
 }
-/* // Ikon dalam item navigasi diberi jarak dan warna emas. */
+/* Ikon dalam item navigasi diberi jarak dan warna emas. */
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Playfair Display', serif;
@@ -101,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 900;
   letter-spacing: 0.5px;
 }
-/* // Semua heading menggunakan font Playfair Display, warna emas, tebal, dan jarak antar huruf sedikit lebih lebar. */
+/* Semua heading menggunakan font Playfair Display, warna emas, tebal, dan jarak antar huruf sedikit lebih lebar. */
 
 .section-title {
   font-size: 3.5rem;
@@ -122,7 +121,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 1rem auto;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
-/* // Gaya untuk judul section: besar, gradien emas, bayangan teks, dan garis dekoratif emas di bawahnya. */
+/* Gaya untuk judul section: besar, gradien emas, bayangan teks, dan garis dekoratif emas di bawahnya. */
 
 .btn-primary {
   background: linear-gradient(90deg, #d4af37, #e6c74a);
@@ -141,7 +140,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
 }
-/* // Tombol utama dengan gradien emas, sudut membulat, dan efek hover (mengangkat tombol dan bayangan). */
+/* Tombol utama dengan gradien emas, sudut membulat, dan efek hover (mengangkat tombol dan bayangan). */
 
 .btn-outline-light {
   border-color: var(--primary-gold);
@@ -158,7 +157,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
 }
-/* // Tombol outline dengan border emas, teks emas, dan efek hover serupa dengan tombol utama. */
+/* Tombol outline dengan border emas, teks emas, dan efek hover serupa dengan tombol utama. */
 
 .menu-item {
   background: rgba(30, 30, 47, 0.9);
@@ -177,7 +176,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 15px 30px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
   transform: translateY(-10px) scale(1.03);
 }
-/* // Kartu menu dengan latar semi-transparan, efek blur, dan border emas tipis. Saat hover, kartu terangkat dan membesar dengan bayangan emas. */
+/* Kartu menu dengan latar semi-transparan, efek blur, dan border emas tipis. Saat hover, kartu terangkat dan membesar dengan bayangan emas. */
 
 .menu-item .card-img-container {
   position: relative;
@@ -195,7 +194,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.15);
   filter: brightness(1) contrast(1.2);
 }
-/* // Kontainer gambar kartu menu dengan tinggi tetap. Gambar menyesuaikan ukuran, dan saat hover, gambar membesar serta lebih cerah dan kontras. */
+/* Kontainer gambar kartu menu dengan tinggi tetap. Gambar menyesuaikan ukuran, dan saat hover, gambar membesar serta lebih cerah dan kontras. */
 
 .menu-item .card-img-overlay {
   position: absolute;
@@ -213,7 +212,7 @@ h1, h2, h3, h4, h5, h6 {
 .menu-item:hover .card-img-overlay {
   opacity: 1;
 }
-/* // Overlay pada gambar kartu menu, muncul saat hover dengan gradien emas ke hitam, menampilkan nama menu di tengah. */
+/* Overlay pada gambar kartu menu, muncul saat hover dengan gradien emas ke hitam, menampilkan nama menu di tengah. */
 
 .menu-item .card-img-overlay h5 {
   font-family: 'Playfair Display', serif;
@@ -226,7 +225,7 @@ h1, h2, h3, h4, h5, h6 {
 .menu-item:hover .card-img-overlay h5 {
   transform: translateY(0);
 }
-/* // Teks pada overlay gambar dengan animasi muncul ke atas saat hover. */
+/* Teks pada overlay gambar dengan animasi muncul ke atas saat hover. */
 
 .menu-item .card-body {
   padding: 2rem;
@@ -250,7 +249,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.8;
   flex-grow: 1;
 }
-/* // Isi kartu menu: padding, judul dengan font Playfair Display, dan deskripsi dengan font Roboto. */
+/* Isi kartu menu: padding, judul dengan font Playfair Display, dan deskripsi dengan font Roboto. */
 
 .menu-item .price {
   font-family: 'Roboto', sans-serif;
@@ -268,7 +267,7 @@ h1, h2, h3, h4, h5, h6 {
   background: linear-gradient(to right, #d4af37, transparent);
   margin-bottom: 0.75rem;
 }
-/* // Harga pada kartu menu dengan garis dekoratif emas di atasnya. */
+/* Harga pada kartu menu dengan garis dekoratif emas di atasnya. */
 
 .menu-item .btn-container {
   margin-top: auto;
@@ -292,7 +291,7 @@ h1, h2, h3, h4, h5, h6 {
   20%, 60% { transform: translateX(-4px); }
   40%, 80% { transform: translateX(4px); }
 }
-/* // Tombol sekunder untuk item habis stok dengan efek goyang saat hover dan kursor non-aktif. */
+/* Tombol sekunder untuk item habis stok dengan efek goyang saat hover dan kursor non-aktif. */
 
 #particles-bg {
   position: absolute;
@@ -302,7 +301,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   z-index: 0;
 }
-/* // Elemen untuk latar belakang animasi partikel di section menu. */
+/* Elemen untuk latar belakang animasi partikel di section menu. */
 
 .bg-dark {
   background: linear-gradient(135deg, #0f0f1a 0%, #1e1e2f 100%) !important;
@@ -319,7 +318,7 @@ h1, h2, h3, h4, h5, h6 {
   background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
   z-index: 0;
 }
-/* // Latar belakang section menu dengan gradien gelap dan efek radial emas. */
+/* Latar belakang section menu dengan gradien gelap dan efek radial emas. */
 
 .filter-btn {
   background: transparent;
@@ -331,6 +330,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   margin: 0.5rem;
   transition: all 0.3s ease;
+  text-decoration: none; /* Menghapus garis bawah */
 }
 .filter-btn:hover, .filter-btn.active {
   background: linear-gradient(90deg, #d4af37, #e6c74a);
@@ -338,7 +338,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
-/* // Tombol filter kategori dengan border emas dan efek hover gradien emas. */
+/* Tombol filter kategori dengan border emas dan efek hover gradien emas. */
 
 .pagination .page-link {
   background: var(--light-bg);
@@ -359,7 +359,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.1);
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }
-/* // Tombol paginasi berbentuk lingkaran dengan efek hover dan aktif serupa tombol filter. */
+/* Tombol paginasi berbentuk lingkaran dengan efek hover dan aktif serupa tombol filter. */
 
 #loginModal {
   backdrop-filter: blur(8px);
@@ -371,7 +371,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 20px;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
-/* // Modal reservasi dengan latar belakang semi-transparan, efek blur, dan border emas. */
+/* Modal reservasi dengan latar belakang semi-transparan, efek blur, dan border emas. */
 
 #loginModal .modal-header {
   border-bottom: none;
@@ -388,7 +388,7 @@ h1, h2, h3, h4, h5, h6 {
 #loginModal .modal-footer {
   border-top: none;
 }
-/* // Mengatur header, judul, dan isi modal, menghapus garis pemisah default. */
+/* Mengatur header, judul, dan isi modal, menghapus garis pemisah default. */
 
 #loginModal .btn-secondary {
   background-color: #333333;
@@ -411,24 +411,25 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
 }
-/*  Tombol di dalam modal dengan gaya konsisten tema emas. */
+/* Tombol di dalam modal dengan gaya konsisten tema emas. */
 
 .back-to-index {
   display: block;
-  margin: 3rem auto;
+  margin: 2rem auto; /* Mengurangi margin dari 3rem menjadi 2rem */
   background: linear-gradient(90deg, #d4af37, #e6c74a);
   border: 2px solid #d4af37;
   color: #0f0f1a;
-  border-radius: 50px;
-  padding: 0.6rem 1.8rem;
+  border-radius: 25px; /* Mengurangi radius agar lebih proporsional */
+  padding: 0.4rem 1.5rem; /* Mengurangi padding dari 0.6rem 1.8rem menjadi 0.4rem 1.5rem */
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Mengurangi ukuran font dari 1.1rem menjadi 1rem */
   text-align: center;
   position: relative;
   overflow: hidden;
   transition: all 0.5s ease;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  text-decoration: none; /* Menghapus garis bawah */
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.4); /* Mengurangi bayangan agar lebih halus */
 }
 .back-to-index::before {
   content: '';
@@ -445,18 +446,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 .back-to-index:hover {
   background: linear-gradient(90deg, #e6c74a, #d4af37);
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.6);
+  transform: translateY(-3px) scale(1.03); /* Mengurangi scale dari 1.05 menjadi 1.03 */
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.6); /* Mengurangi intensitas bayangan */
   color: #0f0f1a;
 }
 .back-to-index i {
-  margin-right: 0.5rem;
+  margin-right: 0.3rem; /* Mengurangi jarak ikon dari 0.5rem menjadi 0.3rem */
   transition: transform 0.3s ease;
 }
 .back-to-index:hover i {
-  transform: translateX(-5px);
+  transform: translateX(-3px); /* Mengurangi pergeseran ikon dari -5px menjadi -3px */
 }
- /*Tombol "Back to Home" dengan efek gradien emas, animasi kilau saat hover, dan ikon panah yang bergerak ke kiri. */
+/* Tombol "Back to Home" dengan efek gradien emas, animasi kilau saat hover, dan ikon panah yang bergerak ke kiri. */
 
 @media (max-width: 768px) {
   .section-title {
@@ -511,32 +512,31 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.4rem 1.2rem;
   }
 }
-/* Media queries untuk responsivitas, menyesuaikan ukuran font, padding, dan tinggi gambar untuk tablet dan ponsel.*/
-
+/* Media queries untuk responsivitas, menyesuaikan ukuran font, padding, dan tinggi gambar untuk tablet dan ponsel. */
 </style>
 
 <?php
 include '../includes/config.php';
-// Memasukkan file konfigurasi (biasanya untuk koneksi database).
+// Menyertakan file konfigurasi (biasanya untuk koneksi database).
 
-// Pagination settings
+// Pengaturan paginasi
 $items_per_page = 6;
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $items_per_page;
 // Mengatur paginasi: 6 item per halaman, halaman saat ini dari parameter GET, dan offset untuk query.
 
-// Filter settings
+// Pengaturan filter
 $category = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : 'all';
-$where_clause = ($category !== 'all') ? "WHERE tersedia = 1 AND kategori = '$category'" : "WHERE tersedia = 1";
-// Mengatur filter kategori berdasarkan parameter GET, dengan sanitasi untuk mencegah SQL injection.
+$where_clause = ($category !== 'all') ? "WHERE kategori = '$category'" : "";
+// Mengatur filter kategori berdasarkan parameter GET, dengan sanitasi untuk mencegah SQL injection, menghapus kondisi stok.
 
-// Fetch total items for pagination
+// Mengambil total item untuk paginasi
 $total_query = $conn->query("SELECT COUNT(*) as total FROM menu $where_clause");
 $total_items = $total_query->fetch_assoc()['total'];
 $total_pages = ceil($total_items / $items_per_page);
 // Menghitung total item dan jumlah halaman untuk paginasi.
 
-// Fetch menu items
+// Mengambil item menu
 $menus = [];
 $query = "SELECT nama_menu, deskripsi, harga, stok, gambar_menu, kategori FROM menu $where_clause LIMIT $items_per_page OFFSET $offset";
 $result = $conn->query($query);
@@ -548,9 +548,9 @@ if ($result) {
 }
 // Mengambil data menu dari database berdasarkan filter dan paginasi, menyimpan hasil dalam array $menus.
 
-// Fetch categories for filter
+// Mengambil kategori untuk filter
 $categories = [];
-$cat_query = $conn->query("SELECT DISTINCT kategori FROM menu WHERE tersedia = 1");
+$cat_query = $conn->query("SELECT DISTINCT kategori FROM menu");
 if ($cat_query) {
     while ($row = $cat_query->fetch_assoc()) {
         $categories[] = $row['kategori'];
@@ -558,30 +558,27 @@ if ($cat_query) {
     $cat_query->free();
 }
 // Mengambil daftar kategori unik untuk tombol filter.
-
 ?>
 
-<!-- Menu Section -->
+<!-- Bagian Menu -->
 <section class="py-5 bg-dark position-relative" id="menu">
   <div id="particles-bg"></div>
   <div class="container position-relative">
-    <!-- // Section menu dengan latar belakang gelap dan elemen untuk animasi partikel. -->
+    <!-- Section menu dengan latar belakang gelap dan elemen untuk animasi partikel. -->
 
     <h2 class="text-center section-title" data-aos="fade-down">Our Full Menu</h2>
-    <!-- // Judul section dengan animasi AOS fade-down. -->
+    <!-- Judul section dengan animasi AOS fade-down. -->
 
-    <!-- Filter Buttons -->
+    <!-- Tombol Filter -->
     <div class="text-center mb-5" data-aos="fade-up">
       <a href="?page=1&category=all" class="filter-btn <?php echo $category === 'all' ? 'active' : ''; ?>" data-aos="zoom-in">All</a>
-      <?php foreach ($categories as $cat): ?>
-        <a href="?page=1&category=<?php echo urlencode($cat); ?>" class="filter-btn <?php echo $category === $cat ? 'active' : ''; ?>" data-aos="zoom-in" data-aos-delay="<?php echo (array_search($cat, $categories) + 1) * 100; ?>">
-          <?php echo htmlspecialchars($cat); ?>
-        </a>
-      <?php endforeach; ?>
+      <a href="?page=1&category=makanan" class="filter-btn <?php echo $category === 'makanan' ? 'active' : ''; ?>" data-aos="zoom-in" data-aos-delay="100">Foods</a>
+      <a href="?page=1&category=minuman" class="filter-btn <?php echo $category === 'minuman' ? 'active' : ''; ?>" data-aos="zoom-in" data-aos-delay="200">Drinks</a>
+      <a href="?page=1&category=dessert" class="filter-btn <?php echo $category === 'dessert' ? 'active' : ''; ?>" data-aos="zoom-in" data-aos-delay="200">Desserts</a>
     </div>
-    <!-- // Tombol filter untuk semua kategori dan kategori spesifik, dengan animasi AOS dan status aktif. -->
+    <!-- Tombol filter untuk semua kategori dan kategori spesifik, dengan animasi AOS dan status aktif. -->
 
-    <!-- Menu Items -->
+    <!-- Item Menu -->
     <div class="row g-4">
       <?php
       if (!empty($menus)) {
@@ -592,7 +589,7 @@ if ($cat_query) {
           $alt_text = htmlspecialchars($menu['nama_menu']) . ' - ' . substr(htmlspecialchars($menu['deskripsi']), 0, 50) . '...';
           $button_text = $menu['stok'] > 0 
               ? '<a href="#" class="btn btn-primary rounded-pill px-4 order-btn" data-bs-toggle="modal" data-bs-target="#loginModal">Order Now</a>' 
-              : '<button class="btn btn-secondary rounded-pill px-4" disabled>Sold Out</button>';
+              : '<button class="btn btn-secondary rounded-pill px-4" disabled>Out of Stock</button>';
           // Menentukan gambar (default jika tidak ada), teks alt, dan tombol berdasarkan stok.
 
           echo '<div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="' . ($index * 150) . '">
@@ -622,7 +619,7 @@ if ($cat_query) {
       ?>
     </div>
 
-    <!-- Pagination -->
+    <!-- Paginasi -->
     <?php if ($total_pages > 1): ?>
       <nav aria-label="Menu pagination" class="mt-5" data-aos="fade-up">
         <ul class="pagination justify-content-center">
@@ -648,18 +645,18 @@ if ($cat_query) {
         </ul>
       </nav>
     <?php endif; ?>
-    <!-- // Navigasi paginasi dengan tombol Previous, nomor halaman, dan Next, hanya ditampilkan jika ada lebih dari satu halaman. -->
+    <!-- Navigasi paginasi dengan tombol Previous, nomor halaman, dan Next, hanya ditampilkan jika ada lebih dari satu halaman. -->
 
-    <!-- Refined Back to Index Button -->
+    <!-- Tombol Kembali ke Indeks yang Diperhalus -->
     <a href="../customer.php" class="back-to-index" data-aos="fade-up">
       <i class="fas fa-arrow-left"></i> Back to Home
     </a>
-    <!-- // Tombol kembali ke halaman utama dengan ikon panah dan animasi AOS. -->
+    <!-- Tombol kembali ke halaman utama dengan ikon panah dan animasi AOS. -->
 
   </div>
 </section>
 
-<!-- Reservation Notification Modal -->
+<!-- Modal Notifikasi Reservasi -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -677,26 +674,26 @@ if ($cat_query) {
     </div>
   </div>
 </div>
-<!-- // Modal untuk notifikasi reservasi, muncul saat tombol "Order Now" diklik, dengan tombol Close dan Reserve Now. -->
+<!-- Modal untuk notifikasi reservasi, muncul saat tombol "Order Now" diklik, dengan tombol Close dan Reserve Now. -->
 
-<?php include '../includes/footer.php'; ?>
-<!-- // Memasukkan file footer.php, biasanya berisi elemen penutup seperti </body> dan </html>. -->
+<?php include '../includes/footer_customer.php'; ?>
+<!-- Menyertakan file footer_customer.php, biasanya berisi elemen penutup seperti </body> dan </html>. -->
 
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<!-- // Memuat JavaScript Bootstrap 5 untuk komponen interaktif seperti modal. -->
+<!-- Memuat JavaScript Bootstrap 5 untuk komponen interaktif seperti modal. -->
 
 <!-- AOS JS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<!-- // Memuat library AOS untuk animasi saat scroll. -->
+<!-- Memuat library AOS untuk animasi saat scroll. -->
 
 <!-- Particles.js -->
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<!-- // Memuat Particles.js untuk animasi partikel di latar belakang. -->
+<!-- Memuat Particles.js untuk animasi partikel di latar belakang. -->
 
 <!-- Vanilla Tilt -->
 <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
-<!-- // Memuat Vanilla Tilt untuk efek kemiringan pada kartu menu. -->
+<!-- Memuat Vanilla Tilt untuk efek kemiringan pada kartu menu. -->
 
 <script>
   AOS.init({
@@ -706,7 +703,7 @@ if ($cat_query) {
   });
   // Menginisialisasi AOS dengan durasi animasi 1 detik, sekali per elemen, dan efek easing halus.
 
-  // Particles.js for menu section
+  // Particles.js untuk section menu
   if (window.innerWidth > 576) {
     particlesJS('particles-bg', {
       particles: {
@@ -749,7 +746,7 @@ if ($cat_query) {
   }
   // Animasi partikel di latar belakang section menu, hanya aktif pada layar > 576px, dengan partikel emas berbentuk lingkaran, segitiga, atau bintang.
 
-  // Ripple effect on button click
+  // Efek riak saat tombol diklik
   document.querySelectorAll('.btn-primary, .back-to-index').forEach(btn => {
     btn.addEventListener('click', function(e) {
       const rect = this.getBoundingClientRect();
@@ -783,7 +780,7 @@ if ($cat_query) {
   });
   // Lazy loading untuk gambar dengan kelas 'lazy', memuat gambar hanya saat masuk ke viewport.
 
-  // Navbar shadow on scroll (removed since navbar is deleted, but kept for reference)
+  // Bayangan navbar saat scroll (dihapus karena navbar dihapus, tetapi disimpan untuk referensi)
   window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (navbar && window.scrollY > 50) {

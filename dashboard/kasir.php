@@ -131,6 +131,72 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
         }
     }
 }
+
+// Add cancel reservation handler
+if (isset($_POST['cancel_reservation']) && isset($_POST['id_reservasi'])) {
+    $reservation_id = intval($_POST['id_reservasi']);
+    if (!isset($processed_reservations[$reservation_id])) {
+        // Begin transaction
+        $conn->begin_transaction();
+        try {
+            // Check payment status
+            $stmt = $conn->prepare("SELECT total_tagihan, jumlah_dibayar, status_payment FROM pembayaran WHERE id_reservasi = ? LIMIT 1");
+            $stmt->bind_param("i", $reservation_id);
+            $stmt->execute();
+            $payment_result = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            if ($payment_result && $payment_result['status_payment'] !== 'Fully Paid') {
+                // Get area ID
+                $stmt = $conn->prepare("SELECT id_area FROM reservasi WHERE id_reservasi = ?");
+                $stmt->bind_param("i", $reservation_id);
+                $stmt->execute();
+                $area_result = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+
+                if ($area_result) {
+                    $area_id = $area_result['id_area'];
+
+                    // Update area availability
+                    $stmt = $conn->prepare("UPDATE area SET tersedia = 1 WHERE id_area = ?");
+                    $stmt->bind_param("i", $area_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Update reservation status
+                    $stmt = $conn->prepare("UPDATE reservasi SET payment_status = 'cancelled' WHERE id_reservasi = ?");
+                    $stmt->bind_param("i", $reservation_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Update payment status
+                    $stmt = $conn->prepare("UPDATE pembayaran SET status_payment = 'Cancelled', jumlah_dibayar = 0 WHERE id_reservasi = ?");
+                    $stmt->bind_param("i", $reservation_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Update orders status
+                    $stmt = $conn->prepare("UPDATE pesanan SET status_pesanan = 'cancelled' WHERE id_reservasi = ?");
+                    $stmt->bind_param("i", $reservation_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    $processed_reservations[$reservation_id] = true;
+                    $conn->commit();
+                    echo '<div class="alert alert-success text-center" role="alert">Reservation cancelled successfully.</div>';
+                } else {
+                    throw new Exception("Reservation not found.");
+                }
+            } else {
+                throw new Exception("Cannot cancel: Reservation is fully paid or payment not found.");
+            }
+        } catch (Exception $e) {
+            $conn->rollback();
+            error_log("Failed to cancel reservation: " . $e->getMessage());
+            echo '<div class="alert alert-danger text-center" role="alert">Error cancelling reservation: ' . htmlspecialchars($e->getMessage()) . '</div>';
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -347,6 +413,36 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
             box-shadow: none; 
         }
 
+        .btn-danger {
+            background-color: var(--error-bg);
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.5);
+        }
+
+        .btn-danger:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger:disabled { 
+            background: #666; 
+            cursor: not-allowed; 
+            box-shadow: none; 
+        }
+
         .nav-tabs {
             border-bottom: var(--gold-line);
             margin-bottom: 1rem;
@@ -401,13 +497,13 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
 
         @media (max-width: 768px) {
             .section-title { font-size: 1.8rem; }
-            .btn-primary, .btn-success { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+            .btn-primary, .btn-success, .btn-danger { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
             .nav-tabs .nav-link { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
         }
 
         @media (max-width: 576px) {
             .section-title { font-size: 1.5rem; }
-            .btn-primary, .btn-success { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+            .btn-primary, .btn-success, .btn-danger { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
             .nav-tabs .nav-link { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
             .card { padding: 0.75rem; }
         }
@@ -439,7 +535,7 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                                       JOIN user u ON r.id_user = u.id_user 
                                       LEFT JOIN pembayaran p ON r.id_reservasi = p.id_reservasi 
                                       JOIN area a ON r.id_area = a.id_area 
-                                      WHERE u.aktif = 1 AND (p.status_payment != 'Fully Paid' OR a.tersedia = 0)
+                                      WHERE u.aktif = 1 AND (p.status_payment != 'Fully Paid' OR a.tersedia = 0) AND r.payment_status != 'cancelled'
                                       ORDER BY r.tanggal DESC");
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -504,6 +600,12 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                                                 </form>
                                             <?php } elseif (isset($processed_reservations[$reservation_id]) || $area_status == 1) { ?>
                                                 <button class="btn btn-success w-100" disabled><i class="fas fa-check me-1"></i>Available</button>
+                                            <?php } ?>
+                                            <?php if ($status_payment !== 'Fully Paid' && !isset($processed_reservations[$reservation_id])) { ?>
+                                                <form method="post" class="mt-2">
+                                                    <input type="hidden" name="id_reservasi" value="<?php echo $reservation_id; ?>">
+                                                    <button type="submit" name="cancel_reservation" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to cancel this reservation? This action cannot be undone.');"><i class="fas fa-times me-1"></i>Cancel Reservation</button>
+                                                </form>
                                             <?php } ?>
                                         </div>
                                         <div class="col-md-4">
@@ -585,7 +687,7 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                                               JOIN user u ON r.id_user = u.id_user 
                                               LEFT JOIN pembayaran p ON r.id_reservasi = p.id_reservasi 
                                               JOIN area a ON r.id_area = a.id_area 
-                                              WHERE p.status_payment = 'Fully Paid' AND a.tersedia = 1
+                                              WHERE (p.status_payment = 'Fully Paid' AND a.tersedia = 1) OR r.payment_status = 'cancelled'
                                               ORDER BY r.tanggal DESC");
                 $stmt_history->execute();
                 $history_result = $stmt_history->get_result();
@@ -608,6 +710,8 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                             $display_status = 'Deposit';
                         } elseif ($status_payment === 'Fully Paid') {
                             $display_status = 'Paid Off';
+                        } elseif ($status_payment === 'Cancelled') {
+                            $display_status = 'Cancelled';
                         }
 
                         ?>
@@ -615,7 +719,9 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                             <div class="card-header">
                                 <h5 class="text-anchor mb-0">
                                     #<?php echo htmlspecialchars($reservation_id); ?> - <?php echo htmlspecialchars($reservation['nama']); ?>
-                                    <span class="badge bg-success ms-2">Completed</span>
+                                    <span class="badge bg-<?php echo $status_payment === 'Cancelled' ? 'danger' : 'success'; ?> ms-2">
+                                        <?php echo htmlspecialchars($display_status); ?>
+                                    </span>
                                 </h5>
                                 <button class="btn btn-link text-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#history-collapse-<?php echo $reservation_id; ?>">
                                     <i class="fas fa-chevron-down"></i>
@@ -640,7 +746,9 @@ if (isset($_POST['mark_success']) && isset($_POST['id_reservasi'])) {
                                                 $area_name = $stmt_area->get_result()->fetch_assoc()['nama_area'] ?? 'Not specified';
                                                 $stmt_area->close();
                                                 echo htmlspecialchars($area_name); ?> 
-                                                <span class="badge bg-success ms-1">Available</span>
+                                                <span class="badge bg-<?php echo $area_status == 0 ? 'danger' : 'success'; ?> ms-1">
+                                                    <?php echo $area_status == 0 ? 'Unavailable' : 'Available'; ?>
+                                                </span>
                                             </p>
                                             <p><strong>Table:</strong> <?php echo htmlspecialchars($reservation['lokasi_meja'] ?? 'Not specified'); ?></p>
                                             <p><strong>Capacity:</strong> <?php echo htmlspecialchars($reservation['jumlah_orang'] ?? 0); ?> persons</p>

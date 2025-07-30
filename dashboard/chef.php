@@ -35,7 +35,7 @@ if (isset($_POST['update_status']) && isset($_POST['id_pesanan']) && isset($_POS
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/assets/img/logo.png" type="image/gif" sizes="16x16">
-    <title>Chef Dashboard || FineDining</title>
+    <title>Kitchen Dashboard || FineDining</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -252,7 +252,7 @@ if (isset($_POST['update_status']) && isset($_POST['id_pesanan']) && isset($_POS
     <div class="chef-hat"><i class="fas fa-hat-cowboy"></i></div>
 
     <section class="container py-5 position-relative">
-        <h1 class="section-title" data-aos="zoom-in" data-aos-duration="1000">Chef Dashboard</h1>
+        <h1 class="section-title" data-aos="zoom-in" data-aos-duration="1000">Kitchen Dashboard</h1>
 
         <!-- Sticky Filter Bar -->
         <div class="sticky-top bg-transparent py-2" style="z-index: 1000;">

@@ -700,7 +700,7 @@ if ($result) {
     if (empty($areas)) {
         echo '<div class="col-12 text-center text-muted" role="alert">
                 <p>No seating areas available at the moment.</p>
-              </div>';
+              </div>';  
     }
     ?>
   </div>
